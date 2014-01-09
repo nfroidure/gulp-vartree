@@ -75,7 +75,11 @@ function gulpVartree(options) {
         }
         files.splice(files.indexOf(file));
         if(!files.length) {
-          if(endCallback) endCallback();
+          if(endCallback) {
+            endCallback();
+          } else if('end' !== options.varEvent) {
+            stream.emit(options.varEvent);
+          }
         }
       });
     // Otherwise do it right now !
@@ -97,7 +101,9 @@ function gulpVartree(options) {
 
   // Flush only when everything is populated
   stream._flush = function(cb) {
-    if('end' !== options.varEvent || !files.length) {
+    if('end' !== options.varEvent) {
+      stream.emit(options.varEvent); cb();
+    } else if(!files.length) {
       cb();
     } else {
       endCallback = cb;

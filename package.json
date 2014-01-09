@@ -1,7 +1,7 @@
 {
   "name": "gulp-vartree",
   "version": "0.0.1",
-  "description": "Create a variable tree from a property values of given files.",
+  "description": "Create a variable tree from the property values of given files.",
   "main": "src/index.js",
   "scripts": {
     "test": "node_modules/mocha/bin/mocha tests/*.mocha.js"

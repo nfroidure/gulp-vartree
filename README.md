@@ -1,5 +1,5 @@
 # gulp-vartree [![NPM version](https://badge.fury.io/js/gulp-vartree.png)](https://npmjs.org/package/gulp-vartree) [![Build status](https://api.travis-ci.org/nfroidure/gulp-vartree.png)](https://travis-ci.org/nfroidure/gulp-vartree)
-> Create a tree with the files that are passed in with [Gulp](http://gulpjs.com/).
+> Create a variable tree with the files that are passed in with [Gulp](http://gulpjs.com/).
 
 ## Usage
 
