@@ -32,6 +32,31 @@ gulp.task('vartree', function() {
     });
 });
 ```
+The created variable tree looks like that:
+```js
+{
+  "index":{"title":"index"},
+  "childs":[
+    {"title":"file1"},
+    {"title":"file2"}
+  ],
+  "test":{,
+    "index":{"title":"test-index"},
+    "childs":[
+      {"title":"test-file1"},
+      {"title":"test-file2"}
+    ]
+  }
+}
+```
+for the followind directory tree :
+
+* index.md
+* file1.md
+* file2.md
+* * index.md
+* * file1.md
+* * file2.md
 
 `gulp-vartree` can be used with
  [gulp-mdvars](https://github.com/nfroidure/gulp-mdvars) but also with any Gulp
