@@ -1,0 +1,44 @@
+{
+  "name": "gulp-vartree",
+  "version": "0.0.1",
+  "description": "Create a variable tree from a property values of given files.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node_modules/mocha/bin/mocha tests/*.mocha.js"
+  },
+  "keywords": [
+    "gulpplugin",
+    "gulp",
+    "variable",
+    "tree",
+    "metadata"
+  ],
+  "homepage": "https://github.com/nfroidure/gulp-vartree",
+  "author": {
+    "name": "Nicolas Froidure",
+    "url": "http://www.insertafter.com/blog.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nfroidure/gulp-vartree.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nfroidure/gulp-vartree/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/nfroidure/gulp-vartree/blob/master/LICENSE"
+    }
+  ],
+  "dependencies": {
+    "gulp-util": "~2.2.0",
+    "grunt": "~0.4.2"
+  },
+  "devDependencies": {
+    "event-stream": "~3.0.20",
+    "mocha": "~1.16.2",
+    "gulp-mdvars": "0.0.1",
+    "gulp": "~3.2.4"
+  }
+}
