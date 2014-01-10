@@ -39,6 +39,7 @@
     "event-stream": "~3.0.20",
     "mocha": "~1.16.2",
     "gulp-mdvars": "0.0.1",
-    "gulp": "~3.2.4"
+    "gulp": "~3.2.4",
+    "varstream": "~0.2.2"
   }
 }

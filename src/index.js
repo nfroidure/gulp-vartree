@@ -18,6 +18,8 @@ function gulpVartree(options) {
 
   options.varEvent = options.varEvent || 'end';
 
+  options.folderProp = options.folderProp || 'name';
+
   var root = options.root;
 
   var files = [], endCallback;
@@ -45,24 +47,41 @@ function gulpVartree(options) {
     var folders = base.split(Path.sep);
     var curScope = root;
     var folder;
+    var parent;
     while(folders.length) {
       folder = folders.shift();
       if('' === folder) continue;
       // Create the scope if it doesn''t exist
-      if(!curScope[folder]) {
-        curScope[folder] = {};
+      if(!curScope[options.childsProp]) {
+        curScope[options.childsProp] = [];
       }
-      // Add a reference to the parent scope
-      if(options.parent) {
-        curScope[folder][options.parent] = curScope;
+      if(!curScope[options.childsProp].some(function(scope){
+          if(scope[options.folderProp] === folder) {
+            // Set current scope to the one found
+            curScope = scope;
+            return true;
+          }
+          return false;
+        })) {
+        parent = curScope;
+        curScope = {};
+        curScope[options.folderProp] = folder;
+        // Add a reference to the parent scope
+        if(parent != root && options.parent) {
+          curScope[options.parent] = parent;
+        }
+        // Push the new scope in its parent
+        parent[options.childsProp].push(curScope);
       }
-      // Set current scope to the newly created
-      curScope = curScope[folder];
     }
     // Populate vars when the event is emitted if dealing with streams
     if(file.isStream()) {
       files.push(file);
       file.contents.on(options.varEvent, function() {
+        // Add a reference to the parent scope
+        if(curScope != root && options.parent) {
+          file[options.prop][options.parent] = curScope;
+        }
         // Adding the file properties to the scope
         if(options.index
           && options.index === Path.basename(file.path, Path.extname(file.path))) {
@@ -84,6 +103,10 @@ function gulpVartree(options) {
       });
     // Otherwise do it right now !
     } else {
+      // Add a reference to the parent scope
+      if(curScope != root && options.parent) {
+        file[options.prop][options.parent] = curScope;
+      }
       // Adding the file properties to the scope
       if(options.index
         && options.index === Path.basename(file.path, Path.extname(file.path))) {

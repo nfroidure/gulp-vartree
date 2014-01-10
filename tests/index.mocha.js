@@ -5,8 +5,13 @@ var fs = require('fs')
   , vartree = require('../src/index')
   , mdvars = require('gulp-mdvars')
   , assert = require('assert')
+  , VarStream = require('varstream')
 ;
 
+function deepEq(a, b) {
+  assert(VarStream.stringify(a).split(/\r?\n/).sort().join(),
+    VarStream.stringify(b).split(/\r?\n/).sort().join());
+}
 
 describe('gulp-mdvars', function() {
 
@@ -25,20 +30,21 @@ describe('gulp-mdvars', function() {
             }));
         }))
         .pipe(es.wait(function(){
-          assert.deepEqual(root, {
-            "childs":[
-              {"title":"file1"},
-              {"title":"file2"},
-              {"title":"index"}
-            ],
-            "test":{
+          deepEq(root,{
               "childs":[
-                {"title":"test-file1"},
-                {"title":"test-file2"},
-                {"title":"test-index"}
+                {
+                  "name":"test",
+                  "childs":[
+                    {"title":"test-file1"},
+                    {"title":"test-file2"},
+                    {"title":"test-index"}
+                  ]
+                },
+                {"title":"file1"},
+                {"title":"file2"},
+                {"title":"index"}
               ]
-            }
-          });
+            });
           done();
         }));
     });
@@ -57,20 +63,21 @@ describe('gulp-mdvars', function() {
             }));
         }))
         .pipe(es.wait(function(){
-          assert.deepEqual(root, {
-            "__childs":[
-              {"title":"file1"},
-              {"title":"file2"},
-              {"title":"index"}
-            ],
-            "test":{
+          deepEq(root,{
               "__childs":[
-                {"title":"test-file1"},
-                {"title":"test-file2"},
-                {"title":"test-index"}
+                {
+                  "name":"test",
+                  "__childs":[
+                    {"title":"test-file1"},
+                    {"title":"test-file2"},
+                    {"title":"test-index"}
+                  ]
+                },
+                {"title":"file1"},
+                {"title":"file2"},
+                {"title":"index"}
               ]
-            }
-          });
+            });
           done();
         }));
     });
@@ -89,19 +96,20 @@ describe('gulp-mdvars', function() {
             }));
         }))
         .pipe(es.wait(function(){
-          assert.deepEqual(root, {
+          deepEq(root,{
             "childs":[
+              {
+                "name":"test",
+                "childs":[
+                  {"title":"test-file1"},
+                  {"title":"test-file2"},
+                ],
+                "index": {"title":"test-index"}
+              },
               {"title":"file1"},
               {"title":"file2"}
             ],
-            "index" : {"title":"index"},
-            "test":{
-              "childs":[
-                {"title":"test-file1"},
-                {"title":"test-file2"}
-              ],
-              "index" : {"title":"test-index"}
-            }
+            index: {"title":"index"}
           });
           done();
         }));
@@ -121,7 +129,11 @@ describe('gulp-mdvars', function() {
             }));
         }))
         .pipe(es.wait(function(){
-          assert.equal(root.test.parent, root);
+          assert(root.childs.some(function(scope1) {
+            return scope1.childs&&scope1.childs.every(function(scope2) {
+              return scope2.parent === scope1;
+            });
+          }));
           done();
         }));
     });
@@ -138,19 +150,20 @@ describe('gulp-mdvars', function() {
           root: root
         }))
         .pipe(es.wait(function(){
-          assert.deepEqual(root, {
+          deepEq(root,{
             "childs":[
               {"title":"file1"},
               {"title":"file2"},
-              {"title":"index"}
-            ],
-            "test":{
-              "childs":[
-                {"title":"test-file1"},
-                {"title":"test-file2"},
-                {"title":"test-index"}
-              ]
-            }
+              {"title":"index"},
+              {
+                "name":"test",
+                "childs":[
+                  {"title":"test-file1"},
+                  {"title":"test-file2"},
+                  {"title":"test-index"}
+                ]
+              }
+            ]
           });
           done();
         }));
@@ -165,19 +178,20 @@ describe('gulp-mdvars', function() {
           childsProp: '__childs'
         }))
         .pipe(es.wait(function(){
-          assert.deepEqual(root, {
+          deepEq(root,{
             "__childs":[
               {"title":"file1"},
               {"title":"file2"},
-              {"title":"index"}
-            ],
-            "test":{
-              "__childs":[
-                {"title":"test-file1"},
-                {"title":"test-file2"},
-                {"title":"test-index"}
-              ]
-            }
+              {"title":"index"},
+              {
+                "name":"test",
+                "__childs":[
+                  {"title":"test-file1"},
+                  {"title":"test-file2"},
+                  {"title":"test-index"}
+                ]
+              }
+            ]
           });
           done();
         }));
@@ -192,19 +206,20 @@ describe('gulp-mdvars', function() {
           index: 'index'
         }))
         .pipe(es.wait(function(){
-          assert.deepEqual(root, {
+          deepEq(root,{
             "childs":[
               {"title":"file1"},
-              {"title":"file2"}
+              {"title":"file2"},
+              {
+                "name":"test",
+                "childs":[
+                  {"title":"test-file1"},
+                  {"title":"test-file2"},
+                ],
+                "index":{"title":"test-index"}
+              }
             ],
-            "index" : {"title":"index"},
-            "test":{
-              "childs":[
-                {"title":"test-file1"},
-                {"title":"test-file2"}
-              ],
-              "index" : {"title":"test-index"}
-            }
+            "index":{"title":"index"}
           });
           done();
         }));
@@ -219,7 +234,11 @@ describe('gulp-mdvars', function() {
           parent: 'parent'
         }))
         .pipe(es.wait(function(){
-          assert.equal(root.test.parent, root);
+          assert(root.childs.some(function(scope1) {
+            return scope1.childs&&scope1.childs.every(function(scope2) {
+              return scope2.parent === scope1;
+            });
+          }));
           done();
         }));
     });

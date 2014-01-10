@@ -38,15 +38,16 @@ The created variable tree looks like that:
   "index":{"title":"index"},
   "childs":[
     {"title":"file1"},
-    {"title":"file2"}
-  ],
-  "test":{,
-    "index":{"title":"test-index"},
-    "childs":[
-      {"title":"test-file1"},
-      {"title":"test-file2"}
-    ]
-  }
+    {"title":"file2"},
+    {
+      "name": "test",
+      "index":{"title":"test-index"},
+      "childs":[
+        {"title":"test-file1"},
+        {"title":"test-file2"}
+      ]
+    }
+  ]
 }
 ```
 for the followind directory tree :
