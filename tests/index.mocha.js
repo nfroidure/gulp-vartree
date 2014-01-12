@@ -15,6 +15,32 @@ function deepEq(a, b) {
 
 describe('gulp-mdvars', function() {
 
+  describe('with null contents', function() {
+
+    it('should let null files pass through', function(done) {
+
+      var s = vartree({
+          root: {}
+        })
+        , n = 0;
+      s.pipe(es.through(function(file) {
+          assert.equal(file.path,'bibabelula.md');
+          assert.equal(file.contents, null);
+          n++;
+        }, function() {
+          assert.equal(n,1);
+          done();
+        }));
+      s.write(new gutil.File({
+        path: 'bibabelula.md',
+        contents: null
+      }));
+      s.end();
+
+    });
+
+  });
+
   describe('in stream mode', function() {
 
     it('create a vartree', function(done) {

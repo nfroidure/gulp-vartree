@@ -11,7 +11,8 @@ function gulpVartree(options) {
 
   // Giving no root object makes no sense
   if(!(options && options.root instanceof Object)) {
-    throw gutil.PluginError('Please provide an Object to put the vartree in.');
+    throw new gutil.PluginError(PLUGIN_NAME,
+      'Please provide an Object to put the vartree in.');
   }
 
   options.childsProp = options.childsProp || 'childs';
@@ -28,7 +29,11 @@ function gulpVartree(options) {
   options.prop = options.prop || 'metas';
 
   stream._transform = function(file, unused, cb) {
-    if(file.isNull()) return; // Do nothing
+    // When null just pass through
+    if(file.isNull()) {
+      stream.push(file); cb();
+      return;
+    }
 
     // Determining the file base
     var base = Path.dirname(file.path);
@@ -37,7 +42,7 @@ function gulpVartree(options) {
     }
     if(options.base) {
       if(-1 === base.indexOf(options.base)) {
-        this.emit('error', new PluginError(
+        this.emit('error', new PluginError(PLUGIN_NAME,
           'The given base do not fit with the files base ('+ file.path + ')'));
       }
       base = base.substr(options.base.length);
