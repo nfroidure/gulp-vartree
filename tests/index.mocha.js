@@ -9,8 +9,19 @@ var fs = require('fs')
 ;
 
 function deepEq(a, b) {
-  assert(VarStream.stringify(a).split(/\r?\n/).sort().join(),
-    VarStream.stringify(b).split(/\r?\n/).sort().join());
+  assert.equal(VarStream.stringify(a).split(/\r?\n/).sort().join('\n'),
+    VarStream.stringify(b).split(/\r?\n/).sort().join('\n'));
+}
+function recSort(root, childProp) {
+  childProp = childProp || 'childs';
+  root[childProp].sort(function(childA, childB) {
+    if(childA[childProp]) {
+      recSort(childA, childProp);
+      return -1;
+    }
+    return childA.title < childB.title ? -1 : 1;
+  });
+  return root;
 }
 
 describe('gulp-mdvars', function() {
@@ -56,21 +67,57 @@ describe('gulp-mdvars', function() {
             }));
         }))
         .pipe(es.wait(function(){
-          deepEq(root,{
-              "childs":[
-                {
-                  "name":"test",
-                  "childs":[
-                    {"title":"test-file1"},
-                    {"title":"test-file2"},
-                    {"title":"test-index"}
-                  ]
-                },
-                {"title":"file1"},
-                {"title":"file2"},
-                {"title":"index"}
-              ]
-            });
+          deepEq(recSort(root),recSort({
+            "childs":[
+              {
+                "title":"file1",
+                "path":"/",
+                "name":"file1",
+                "ext":".md",
+                "href":"/file1.md"
+              },
+              {
+                "title":"file2",
+                "path":"/",
+                "name":"file2",
+                "ext":".md",
+                "href":"/file2.md"
+              },
+              {
+                "title":"index",
+                "path":"/",
+                "name":"index",
+                "ext":".md",
+                "href":"/index.md"
+              },
+              {
+                "folder":"test",
+                "childs":[
+                  {
+                    "title":"test-file1",
+                    "path":"/test/",
+                    "name":"file1",
+                    "ext":".md",
+                    "href":"/test/file1.md"
+                  },
+                  {
+                    "title":"test-file2",
+                    "path":"/test/",
+                    "name":"file2",
+                    "ext":".md",
+                    "href":"/test/file2.md"
+                  },
+                  {
+                    "title":"test-index",
+                    "path":"/test/",
+                    "name":"index",
+                    "ext":".md",
+                    "href":"/test/index.md"
+                  },
+                ]
+              }
+            ]
+          }));
           done();
         }));
     });
@@ -89,26 +136,62 @@ describe('gulp-mdvars', function() {
             }));
         }))
         .pipe(es.wait(function(){
-          deepEq(root,{
-              "__childs":[
-                {
-                  "name":"test",
-                  "__childs":[
-                    {"title":"test-file1"},
-                    {"title":"test-file2"},
-                    {"title":"test-index"}
-                  ]
-                },
-                {"title":"file1"},
-                {"title":"file2"},
-                {"title":"index"}
-              ]
-            });
+          deepEq(recSort(root, '__childs'),recSort({
+            "__childs":[
+              {
+                "__childs":[
+                  {
+                    "title":"test-file1",
+                    "path":"/test/",
+                    "name":"file1",
+                    "ext":".md",
+                    "href":"/test/file1.md"
+                  },
+                  {
+                    "title":"test-file2",
+                    "path":"/test/",
+                    "name":"file2",
+                    "ext":".md",
+                    "href":"/test/file2.md"
+                  },
+                  {
+                    "title":"test-index",
+                    "path":"/test/",
+                    "name":"index",
+                    "ext":".md",
+                    "href":"/test/index.md"
+                  }
+                ],
+                "folder":"test"
+              },
+              {
+                "title":"file1",
+                "path":"/",
+                "name":"file1",
+                "ext":".md",
+                "href":"/file1.md"
+              },
+              {
+                "title":"file2",
+                "path":"/",
+                "name":"file2",
+                "ext":".md",
+                "href":"/file2.md"
+              },
+              {
+                "title":"index",
+                "path":"/",
+                "name":"index",
+                "ext":".md",
+                "href":"/index.md"
+              }
+            ],
+          }, '__childs'));
           done();
         }));
     });
 
-    it('create an indexed vartree when index=*', function(done) {
+    it('create an indexed vartree when option.index is set', function(done) {
       var root = {};
       gulp.src(__dirname + '/fixtures/**/*.md', {buffer: false})
         .pipe(mdvars())
@@ -122,21 +205,53 @@ describe('gulp-mdvars', function() {
             }));
         }))
         .pipe(es.wait(function(){
-          deepEq(root,{
+          deepEq(recSort(root),recSort({
             "childs":[
               {
-                "name":"test",
                 "childs":[
-                  {"title":"test-file1"},
-                  {"title":"test-file2"},
+                  {
+                    "title":"test-file1",
+                    "path":"/test/",
+                    "name":"file1",
+                    "ext":".md",
+                    "href":"/test/file1.md"
+                  },
+                  {
+                    "title":"test-file2",
+                    "path":"/test/",
+                    "name":"file2",
+                    "ext":".md",
+                    "href":"/test/file2.md"
+                  },
                 ],
-                "index": {"title":"test-index"}
+                "title":"test-index",
+                "folder":"test",
+                "path":"/test/",
+                "name":"index",
+                "ext":".md",
+                "href":"/test/index.md"
               },
-              {"title":"file1"},
-              {"title":"file2"}
+              {
+                "title":"file1",
+                "path":"/",
+                "name":"file1",
+                "ext":".md",
+                "href":"/file1.md"
+              },
+              {
+                "title":"file2",
+                "path":"/",
+                "name":"file2",
+                "ext":".md",
+                "href":"/file2.md"
+              }
             ],
-            index: {"title":"index"}
-          });
+            "title":"index",
+            "path":"/",
+            "name":"index",
+            "ext":".md",
+            "href":"/index.md"
+          }));
           done();
         }));
     });
@@ -178,15 +293,51 @@ describe('gulp-mdvars', function() {
         .pipe(es.wait(function(){
           deepEq(root,{
             "childs":[
-              {"title":"file1"},
-              {"title":"file2"},
-              {"title":"index"},
               {
-                "name":"test",
+                "title":"file1",
+                "path":"/",
+                "name":"file1",
+                "ext":".md",
+                "href":"/file1.md"
+              },
+              {
+                "title":"file2",
+                "path":"/",
+                "name":"file2",
+                "ext":".md",
+                "href":"/file2.md"
+              },
+              {
+                "title":"index",
+                "path":"/",
+                "name":"index",
+                "ext":".md",
+                "href":"/index.md"
+              },
+              {
+                "folder":"test",
                 "childs":[
-                  {"title":"test-file1"},
-                  {"title":"test-file2"},
-                  {"title":"test-index"}
+                  {
+                    "title":"test-file1",
+                    "path":"/test/",
+                    "name":"file1",
+                    "ext":".md",
+                    "href":"/test/file1.md"
+                  },
+                  {
+                    "title":"test-file2",
+                    "path":"/test/",
+                    "name":"file2",
+                    "ext":".md",
+                    "href":"/test/file2.md"
+                  },
+                  {
+                    "title":"test-index",
+                    "path":"/test/",
+                    "name":"index",
+                    "ext":".md",
+                    "href":"/test/index.md"
+                  },
                 ]
               }
             ]
@@ -206,15 +357,51 @@ describe('gulp-mdvars', function() {
         .pipe(es.wait(function(){
           deepEq(root,{
             "__childs":[
-              {"title":"file1"},
-              {"title":"file2"},
-              {"title":"index"},
               {
-                "name":"test",
+                "title":"file1",
+                "path":"/",
+                "name":"file1",
+                "ext":".md",
+                "href":"/file1.md"
+              },
+              {
+                "title":"file2",
+                "path":"/",
+                "name":"file2",
+                "ext":".md",
+                "href":"/file2.md"
+              },
+              {
+                "title":"index",
+                "path":"/",
+                "name":"index",
+                "ext":".md",
+                "href":"/index.md"
+              },
+              {
+                "folder":"test",
                 "__childs":[
-                  {"title":"test-file1"},
-                  {"title":"test-file2"},
-                  {"title":"test-index"}
+                  {
+                    "title":"test-file1",
+                    "path":"/test/",
+                    "name":"file1",
+                    "ext":".md",
+                    "href":"/test/file1.md"
+                  },
+                  {
+                    "title":"test-file2",
+                    "path":"/test/",
+                    "name":"file2",
+                    "ext":".md",
+                    "href":"/test/file2.md"
+                  },
+                  {
+                    "title":"test-index",
+                    "path":"/test/",
+                    "name":"index",
+                    "ext":".md",
+                    "href":"/test/index.md"
+                  },
                 ]
               }
             ]
@@ -223,7 +410,7 @@ describe('gulp-mdvars', function() {
         }));
     });
 
-    it('create an indexed vartree when index=*', function(done) {
+    it('create an indexed vartree when index is set', function(done) {
       var root = {};
       gulp.src(__dirname + '/fixtures/**/*.md', {buffer: true})
         .pipe(mdvars())
@@ -234,17 +421,50 @@ describe('gulp-mdvars', function() {
         .pipe(es.wait(function(){
           deepEq(root,{
             "childs":[
-              {"title":"file1"},
-              {"title":"file2"},
               {
-                "name":"test",
+                "title":"file1",
+                "path":"/",
+                "name":"file1",
+                "ext":".md",
+                "href":"/file1.md"
+              },
+              {
+                "title":"file2",
+                "path":"/",
+                "name":"file2",
+                "ext":".md",
+                "href":"/file2.md"
+              },
+              {
                 "childs":[
-                  {"title":"test-file1"},
-                  {"title":"test-file2"},
+                  {
+                    "title":"test-file1",
+                    "path":"/test/",
+                    "name":"file1",
+                    "ext":".md",
+                    "href":"/test/file1.md"
+                  },
+                  {
+                    "title":"test-file2",
+                    "path":"/test/",
+                    "name":"file2",
+                    "ext":".md",
+                    "href":"/test/file2.md"
+                  },
                 ],
-                "index":{"title":"test-index"}
+                "title":"test-index",
+                "folder":"test",
+                "path":"/test/",
+                "name":"index",
+                "ext":".md",
+                "href":"/test/index.md"
               }
-            ]
+            ],
+            "title":"index",
+            "path":"/",
+            "name":"index",
+            "ext":".md",
+            "href":"/index.md"
           });
           done();
         }));

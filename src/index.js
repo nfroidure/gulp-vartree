@@ -25,10 +25,11 @@ function gulpVartree(options) {
 
   options.varEvent = options.varEvent || 'end';
 
+  options.folderProp = options.folderProp || 'folder';
   options.pathProp = options.pathProp || 'path';
   options.nameProp = options.nameProp || 'name';
   options.extProp = options.extProp || 'ext';
-  options.extProp = options.hrefProp || 'href';
+  options.hrefProp = options.hrefProp || 'href';
 
   // Property to look for vars
   options.prop = options.prop || 'metas';
@@ -66,7 +67,7 @@ function gulpVartree(options) {
         curScope[options.childsProp] = [];
       }
       if(!curScope[options.childsProp].some(function(scope){
-          if(scope[options.nameProp] === folder) {
+          if(scope[options.folderProp] === folder) {
             // Set current scope to the one found
             curScope = scope;
             return true;
@@ -75,7 +76,7 @@ function gulpVartree(options) {
         })) {
         parent = curScope;
         curScope = {};
-        curScope[options.nameProp] = folder;
+        curScope[options.folderProp] = folder;
         // Add a reference to the parent scope
         if(options.parentProp) {
           curScope[options.parentProp] = parent;
@@ -106,7 +107,9 @@ function gulpVartree(options) {
         // Adding the file properties to the scope
         if(options.index
           && options.index === Path.basename(file.path, Path.extname(file.path))) {
-          curScope.index = file[options.prop];
+          for(var prop in obj) {
+            curScope[prop] = obj[prop]
+          }
         } else {
           if(!curScope[options.childsProp]) {
             curScope[options.childsProp] = [];
