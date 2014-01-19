@@ -100,17 +100,18 @@ function gulpVartree(options) {
           obj[options.pathProp],
           obj[options.nameProp] + obj[options.extProp]
         );
-        // Add a reference to the parent scope
-        if(options.parentProp) {
-          file[options.prop][options.parentProp] = curScope;
-        }
         // Adding the file properties to the scope
         if(options.index
           && options.index === Path.basename(file.path, Path.extname(file.path))) {
           for(var prop in obj) {
             curScope[prop] = obj[prop]
           }
+          file[options.prop] = curScope;
         } else {
+          // Add a reference to the parent scope
+          if(options.parentProp) {
+            file[options.prop][options.parentProp] = curScope;
+          }
           if(!curScope[options.childsProp]) {
             curScope[options.childsProp] = [];
           }
