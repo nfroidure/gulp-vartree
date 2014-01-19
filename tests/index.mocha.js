@@ -141,13 +141,13 @@ describe('gulp-mdvars', function() {
         }));
     });
 
-    it('create a reference to parent when option.parent=true', function(done) {
+    it('create a reference to parent when option.parentProp is set', function(done) {
       var root = {};
       gulp.src(__dirname + '/fixtures/**/*.md', {buffer: false})
         .pipe(mdvars())
         .pipe(vartree({
           root: root,
-          parent: 'parent'
+          parentProp: 'parent'
         }))
         .pipe(es.map(function(file, cb){
           file.contents.pipe(es.wait(function(err, data) {
@@ -244,20 +244,19 @@ describe('gulp-mdvars', function() {
                 ],
                 "index":{"title":"test-index"}
               }
-            ],
-            "index":{"title":"index"}
+            ]
           });
           done();
         }));
     });
 
-    it('create a reference to parent when option.parent=true', function(done) {
+    it('create a reference to parent when option.parentProp is set', function(done) {
       var root = {};
       gulp.src(__dirname + '/fixtures/**/*.md', {buffer: true})
         .pipe(mdvars())
         .pipe(vartree({
           root: root,
-          parent: 'parent'
+          parentProp: 'parent'
         }))
         .pipe(es.wait(function(){
           assert(root.childs.some(function(scope1) {

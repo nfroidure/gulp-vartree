@@ -83,7 +83,7 @@ Type: `String`
 
 The base directory you want the tree to begin.
 
-#### options.parent
+#### options.parentProp
 Type: `String`
 
 Indicating the name of the property in wich you want to keep a reference to the
@@ -94,6 +94,30 @@ Type: `String`
 Default value: `'childs'`
 
 Indicating in wich property childs must pushed.
+
+#### options.pathProp
+Type: `String`
+Default value: `'path'`
+
+Indicating in wich property the file path will be set.
+
+#### options.nameProp
+Type: `String`
+Default value: `'name'`
+
+Indicating in wich property the file name will be set.
+
+#### options.extProp
+Type: `String`
+Default value: `'ext'`
+
+Indicating in wich property the file extension will be set.
+
+#### options.hrefProp
+Type: `String`
+Default value: `'href'`
+
+Indicating in wich property the file href will be set.
 
 
 #### options.varEvent

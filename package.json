@@ -1,6 +1,6 @@
 {
   "name": "gulp-vartree",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Create a variable tree from the property values of given files.",
   "main": "src/index.js",
   "scripts": {
