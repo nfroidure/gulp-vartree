@@ -35,13 +35,13 @@ gulp.task('vartree', function() {
 The created variable tree looks like that:
 ```js
 {
-  "index":{"title":"index"},
+  "title":"index",
   "childs":[
     {"title":"file1"},
     {"title":"file2"},
     {
       "name": "test",
-      "index":{"title":"test-index"},
+      "title":"test-index",
       "childs":[
         {"title":"test-file1"},
         {"title":"test-file2"}
@@ -50,7 +50,7 @@ The created variable tree looks like that:
   ]
 }
 ```
-for the followind directory tree :
+for the following directory tree :
 
 * index.md
 * file1.md

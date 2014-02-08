@@ -31,8 +31,37 @@ function gulpVartree(options) {
   options.extProp = options.extProp || 'ext';
   options.hrefProp = options.hrefProp || 'href';
 
+  options.sortDesc = options.sortDesc || false;
+
   // Property to look for vars
   options.prop = options.prop || 'metas';
+
+  // Tree sorting function
+  function treeSorter(node) {
+    if(node[options.childsProp]) {
+      node[options.childsProp].forEach(function(node) {
+        treeSorter(node);
+      });
+      node[options.childsProp].sort(function childSorter(a, b) {
+        if('undefined' == typeof a[options.sortProp]) {
+          return 1;
+        }
+        return a[options.sortProp] > b[options.sortProp] ?
+          (options.sortDesc ? -1 : 1) : (options.sortDesc ? 1 : -1);
+      });
+    }
+  }
+
+  // Stream end function
+  function endStream() {
+    if(options.sortProp) {
+      treeSorter(root);
+    }
+    if('end' !== options.varEvent) {
+      stream.emit(options.varEvent);
+    }
+    endCallback();
+  }
 
   stream._transform = function(file, unused, cb) {
     // When null just pass through
@@ -89,7 +118,7 @@ function gulpVartree(options) {
     function populateVars() {
         var obj = file[options.prop] || {};
         obj[options.nameProp] = Path.basename(file.path, Path.extname(file.path));
-        obj[options.pathProp] = Path.relative(file.base,Path.dirname(file.path));
+        obj[options.pathProp] = Path.relative(file.base, Path.dirname(file.path));
         if(obj[options.pathProp]) {
           obj[options.pathProp] = '/' + obj[options.pathProp] + '/';
         } else {
@@ -126,9 +155,7 @@ function gulpVartree(options) {
         files.splice(files.indexOf(file));
         if(!files.length) {
           if(endCallback) {
-            endCallback();
-          } else if('end' !== options.varEvent) {
-            stream.emit(options.varEvent);
+            endStream();
           }
         }
       });
@@ -142,12 +169,11 @@ function gulpVartree(options) {
 
   // Flush only when everything is populated
   stream._flush = function(cb) {
-    if('end' !== options.varEvent) {
-      stream.emit(options.varEvent); cb();
-    } else if(!files.length) {
-      cb();
-    } else {
-      endCallback = cb;
+    endCallback = cb;
+    // End the stream if no more waiting for datas
+    if(!files.length) {
+      endStream();
+      endCallback = null;
     }
   };
 

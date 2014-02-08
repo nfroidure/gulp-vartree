@@ -68,55 +68,46 @@ describe('gulp-mdvars', function() {
         }))
         .pipe(es.wait(function(){
           deepEq(recSort(root),recSort({
-            "childs":[
-              {
-                "title":"file1",
-                "path":"/",
+            "childs":[{
+              "title":"file1",
+              "path":"/",
+              "name":"file1",
+              "ext":".md",
+              "href":"/file1.md"
+            },{
+              "title":"file2",
+              "path":"/",
+              "name":"file2",
+              "ext":".md",
+              "href":"/file2.md"
+            },{
+              "title":"index",
+              "path":"/",
+              "name":"index",
+              "ext":".md",
+              "href":"/index.md"
+            },{
+              "folder":"test",
+              "childs":[{
+                "title":"test-file1",
+                "path":"/test/",
                 "name":"file1",
                 "ext":".md",
-                "href":"/file1.md"
-              },
-              {
-                "title":"file2",
-                "path":"/",
+                "href":"/test/file1.md"
+              },{
+                "title":"test-file2",
+                "path":"/test/",
                 "name":"file2",
                 "ext":".md",
-                "href":"/file2.md"
-              },
-              {
-                "title":"index",
-                "path":"/",
+                "href":"/test/file2.md"
+              },{
+                "title":"test-index",
+                "path":"/test/",
                 "name":"index",
                 "ext":".md",
-                "href":"/index.md"
-              },
-              {
-                "folder":"test",
-                "childs":[
-                  {
-                    "title":"test-file1",
-                    "path":"/test/",
-                    "name":"file1",
-                    "ext":".md",
-                    "href":"/test/file1.md"
-                  },
-                  {
-                    "title":"test-file2",
-                    "path":"/test/",
-                    "name":"file2",
-                    "ext":".md",
-                    "href":"/test/file2.md"
-                  },
-                  {
-                    "title":"test-index",
-                    "path":"/test/",
-                    "name":"index",
-                    "ext":".md",
-                    "href":"/test/index.md"
-                  },
-                ]
-              }
-            ]
+                "href":"/test/index.md"
+              }]
+            }]
           }));
           done();
         }));
@@ -132,61 +123,174 @@ describe('gulp-mdvars', function() {
         }))
         .pipe(es.map(function(file, cb){
           file.contents.pipe(es.wait(function(err, data) {
-              cb(null, file);
-            }));
+            cb(null, file);
+          }));
         }))
         .pipe(es.wait(function(){
           deepEq(recSort(root, '__childs'),recSort({
-            "__childs":[
-              {
-                "__childs":[
-                  {
-                    "title":"test-file1",
-                    "path":"/test/",
-                    "name":"file1",
-                    "ext":".md",
-                    "href":"/test/file1.md"
-                  },
-                  {
-                    "title":"test-file2",
-                    "path":"/test/",
-                    "name":"file2",
-                    "ext":".md",
-                    "href":"/test/file2.md"
-                  },
-                  {
-                    "title":"test-index",
-                    "path":"/test/",
-                    "name":"index",
-                    "ext":".md",
-                    "href":"/test/index.md"
-                  }
-                ],
-                "folder":"test"
-              },
-              {
-                "title":"file1",
-                "path":"/",
+            "__childs":[{
+              "__childs":[{
+                "title":"test-file1",
+                "path":"/test/",
                 "name":"file1",
                 "ext":".md",
-                "href":"/file1.md"
-              },
-              {
-                "title":"file2",
-                "path":"/",
+                "href":"/test/file1.md"
+              },{
+                "title":"test-file2",
+                "path":"/test/",
                 "name":"file2",
                 "ext":".md",
-                "href":"/file2.md"
-              },
-              {
-                "title":"index",
-                "path":"/",
+                "href":"/test/file2.md"
+              },{
+                "title":"test-index",
+                "path":"/test/",
                 "name":"index",
                 "ext":".md",
-                "href":"/index.md"
-              }
-            ],
+                "href":"/test/index.md"
+              }],
+              "folder":"test"
+            },{
+              "title":"file1",
+              "path":"/",
+              "name":"file1",
+              "ext":".md",
+              "href":"/file1.md"
+            },{
+              "title":"file2",
+              "path":"/",
+              "name":"file2",
+              "ext":".md",
+              "href":"/file2.md"
+            },{
+              "title":"index",
+              "path":"/",
+              "name":"index",
+              "ext":".md",
+              "href":"/index.md"
+            }],
           }, '__childs'));
+          done();
+        }));
+    });
+
+    it('create a sorted vartree when options.sortProp and options.sortDesc is set to false', function(done) {
+      var root = {};
+      gulp.src(__dirname + '/fixtures/**/*.md', {buffer: false})
+        .pipe(mdvars())
+        .pipe(vartree({
+          root: root,
+          sortProp: 'name',
+          sortDesc: false
+        }))
+        .pipe(es.map(function(file, cb){
+          file.contents.pipe(es.wait(function(err, data) {
+            cb(null, file);
+          }));
+        }))
+        .pipe(es.wait(function(){
+          deepEq(root,{
+            "childs":[{
+              "title":"file1",
+              "path":"/",
+              "name":"file1",
+              "ext":".md",
+              "href":"/file1.md"
+            },{
+              "title":"file2",
+              "path":"/",
+              "name":"file2",
+              "ext":".md",
+              "href":"/file2.md"
+            },{
+              "title":"index",
+              "path":"/",
+              "name":"index",
+              "ext":".md",
+              "href":"/index.md"
+            },{
+              "childs":[{
+                "title":"test-file1",
+                "path":"/test/",
+                "name":"file1",
+                "ext":".md",
+                "href":"/test/file1.md"
+              },{
+                "title":"test-file2",
+                "path":"/test/",
+                "name":"file2",
+                "ext":".md",
+                "href":"/test/file2.md"
+              },{
+                "title":"test-index",
+                "path":"/test/",
+                "name":"index",
+                "ext":".md",
+                "href":"/test/index.md"
+              }],
+              "folder":"test"
+            }]
+          });
+          done();
+        }));
+    });
+
+    it('create a sorted vartree when options.sortProp and options.sortDesc is set to true', function(done) {
+      var root = {};
+      gulp.src(__dirname + '/fixtures/**/*.md', {buffer: false})
+        .pipe(mdvars())
+        .pipe(vartree({
+          root: root,
+          sortProp: 'name',
+          sortDesc: true
+        }))
+        .pipe(es.map(function(file, cb){
+          file.contents.pipe(es.wait(function(err, data) {
+            cb(null, file);
+          }));
+        }))
+        .pipe(es.wait(function(){
+          deepEq(root,{
+            "childs":[{
+              "childs":[{
+                "title":"test-index",
+                "path":"/test/",
+                "name":"index",
+                "ext":".md",
+                "href":"/test/index.md"
+              },{
+                "title":"test-file2",
+                "path":"/test/",
+                "name":"file2",
+                "ext":".md",
+                "href":"/test/file2.md"
+              },{
+                "title":"test-file1",
+                "path":"/test/",
+                "name":"file1",
+                "ext":".md",
+                "href":"/test/file1.md"
+              }],
+              "folder":"test"
+            },{
+              "title":"index",
+              "path":"/",
+              "name":"index",
+              "ext":".md",
+              "href":"/index.md"
+            },{
+              "title":"file2",
+              "path":"/",
+              "name":"file2",
+              "ext":".md",
+              "href":"/file2.md"
+            },{
+              "title":"file1",
+              "path":"/",
+              "name":"file1",
+              "ext":".md",
+              "href":"/file1.md"
+            }]
+          });
           done();
         }));
     });
@@ -206,46 +310,39 @@ describe('gulp-mdvars', function() {
         }))
         .pipe(es.wait(function(){
           deepEq(recSort(root),recSort({
-            "childs":[
-              {
-                "childs":[
-                  {
-                    "title":"test-file1",
-                    "path":"/test/",
-                    "name":"file1",
-                    "ext":".md",
-                    "href":"/test/file1.md"
-                  },
-                  {
-                    "title":"test-file2",
-                    "path":"/test/",
-                    "name":"file2",
-                    "ext":".md",
-                    "href":"/test/file2.md"
-                  },
-                ],
-                "title":"test-index",
-                "folder":"test",
+            "childs":[{
+              "childs":[{
+                "title":"test-file1",
                 "path":"/test/",
-                "name":"index",
-                "ext":".md",
-                "href":"/test/index.md"
-              },
-              {
-                "title":"file1",
-                "path":"/",
                 "name":"file1",
                 "ext":".md",
-                "href":"/file1.md"
-              },
-              {
-                "title":"file2",
-                "path":"/",
+                "href":"/test/file1.md"
+              },{
+                "title":"test-file2",
+                "path":"/test/",
                 "name":"file2",
                 "ext":".md",
-                "href":"/file2.md"
-              }
-            ],
+                "href":"/test/file2.md"
+              }],
+              "title":"test-index",
+              "folder":"test",
+              "path":"/test/",
+              "name":"index",
+              "ext":".md",
+              "href":"/test/index.md"
+            },{
+              "title":"file1",
+              "path":"/",
+              "name":"file1",
+              "ext":".md",
+              "href":"/file1.md"
+            },{
+              "title":"file2",
+              "path":"/",
+              "name":"file2",
+              "ext":".md",
+              "href":"/file2.md"
+            }],
             "title":"index",
             "path":"/",
             "name":"index",
@@ -292,55 +389,46 @@ describe('gulp-mdvars', function() {
         }))
         .pipe(es.wait(function(){
           deepEq(root,{
-            "childs":[
-              {
-                "title":"file1",
-                "path":"/",
+            "childs":[{
+              "title":"file1",
+              "path":"/",
+              "name":"file1",
+              "ext":".md",
+              "href":"/file1.md"
+            },{
+              "title":"file2",
+              "path":"/",
+              "name":"file2",
+              "ext":".md",
+              "href":"/file2.md"
+            },{
+              "title":"index",
+              "path":"/",
+              "name":"index",
+              "ext":".md",
+              "href":"/index.md"
+            },{
+              "folder":"test",
+              "childs":[{
+                "title":"test-file1",
+                "path":"/test/",
                 "name":"file1",
                 "ext":".md",
-                "href":"/file1.md"
-              },
-              {
-                "title":"file2",
-                "path":"/",
+                "href":"/test/file1.md"
+              },{
+                "title":"test-file2",
+                "path":"/test/",
                 "name":"file2",
                 "ext":".md",
-                "href":"/file2.md"
-              },
-              {
-                "title":"index",
-                "path":"/",
+                "href":"/test/file2.md"
+              },{
+                "title":"test-index",
+                "path":"/test/",
                 "name":"index",
                 "ext":".md",
-                "href":"/index.md"
-              },
-              {
-                "folder":"test",
-                "childs":[
-                  {
-                    "title":"test-file1",
-                    "path":"/test/",
-                    "name":"file1",
-                    "ext":".md",
-                    "href":"/test/file1.md"
-                  },
-                  {
-                    "title":"test-file2",
-                    "path":"/test/",
-                    "name":"file2",
-                    "ext":".md",
-                    "href":"/test/file2.md"
-                  },
-                  {
-                    "title":"test-index",
-                    "path":"/test/",
-                    "name":"index",
-                    "ext":".md",
-                    "href":"/test/index.md"
-                  },
-                ]
-              }
-            ]
+                "href":"/test/index.md"
+              }]
+            }]
           });
           done();
         }));
@@ -356,55 +444,46 @@ describe('gulp-mdvars', function() {
         }))
         .pipe(es.wait(function(){
           deepEq(root,{
-            "__childs":[
-              {
-                "title":"file1",
-                "path":"/",
+            "__childs":[{
+              "title":"file1",
+              "path":"/",
+              "name":"file1",
+              "ext":".md",
+              "href":"/file1.md"
+            },{
+              "title":"file2",
+              "path":"/",
+              "name":"file2",
+              "ext":".md",
+              "href":"/file2.md"
+            },{
+              "title":"index",
+              "path":"/",
+              "name":"index",
+              "ext":".md",
+              "href":"/index.md"
+            },{
+              "folder":"test",
+              "__childs":[{
+                "title":"test-file1",
+                "path":"/test/",
                 "name":"file1",
                 "ext":".md",
-                "href":"/file1.md"
-              },
-              {
-                "title":"file2",
-                "path":"/",
+                "href":"/test/file1.md"
+              },{
+                "title":"test-file2",
+                "path":"/test/",
                 "name":"file2",
                 "ext":".md",
-                "href":"/file2.md"
-              },
-              {
-                "title":"index",
-                "path":"/",
+                "href":"/test/file2.md"
+              },{
+                "title":"test-index",
+                "path":"/test/",
                 "name":"index",
                 "ext":".md",
-                "href":"/index.md"
-              },
-              {
-                "folder":"test",
-                "__childs":[
-                  {
-                    "title":"test-file1",
-                    "path":"/test/",
-                    "name":"file1",
-                    "ext":".md",
-                    "href":"/test/file1.md"
-                  },
-                  {
-                    "title":"test-file2",
-                    "path":"/test/",
-                    "name":"file2",
-                    "ext":".md",
-                    "href":"/test/file2.md"
-                  },
-                  {
-                    "title":"test-index",
-                    "path":"/test/",
-                    "name":"index",
-                    "ext":".md",
-                    "href":"/test/index.md"
-                  },
-                ]
-              }
-            ]
+                "href":"/test/index.md"
+              }]
+            }]
           });
           done();
         }));
@@ -420,46 +499,39 @@ describe('gulp-mdvars', function() {
         }))
         .pipe(es.wait(function(){
           deepEq(root,{
-            "childs":[
-              {
-                "title":"file1",
-                "path":"/",
+            "childs":[{
+              "title":"file1",
+              "path":"/",
+              "name":"file1",
+              "ext":".md",
+              "href":"/file1.md"
+            },{
+              "title":"file2",
+              "path":"/",
+              "name":"file2",
+              "ext":".md",
+              "href":"/file2.md"
+            },{
+              "childs":[{
+                "title":"test-file1",
+                "path":"/test/",
                 "name":"file1",
                 "ext":".md",
-                "href":"/file1.md"
-              },
-              {
-                "title":"file2",
-                "path":"/",
+                "href":"/test/file1.md"
+              },{
+                "title":"test-file2",
+                "path":"/test/",
                 "name":"file2",
                 "ext":".md",
-                "href":"/file2.md"
-              },
-              {
-                "childs":[
-                  {
-                    "title":"test-file1",
-                    "path":"/test/",
-                    "name":"file1",
-                    "ext":".md",
-                    "href":"/test/file1.md"
-                  },
-                  {
-                    "title":"test-file2",
-                    "path":"/test/",
-                    "name":"file2",
-                    "ext":".md",
-                    "href":"/test/file2.md"
-                  },
-                ],
-                "title":"test-index",
-                "folder":"test",
-                "path":"/test/",
-                "name":"index",
-                "ext":".md",
-                "href":"/test/index.md"
-              }
-            ],
+                "href":"/test/file2.md"
+              }],
+              "title":"test-index",
+              "folder":"test",
+              "path":"/test/",
+              "name":"index",
+              "ext":".md",
+              "href":"/test/index.md"
+            }],
             "title":"index",
             "path":"/",
             "name":"index",
@@ -471,7 +543,56 @@ describe('gulp-mdvars', function() {
     });
 
     it('create a reference to parent when option.parentProp is set', function(done) {
-      var root = {};
+      var root = {}
+        , expected = {
+          "childs":[{
+            "title":"file1",
+            "path":"/",
+            "name":"file1",
+            "ext":".md",
+            "href":"/file1.md"
+          },{
+            "title":"file2",
+            "path":"/",
+            "name":"file2",
+            "ext":".md",
+            "href":"/file2.md"
+          },{
+            "title":"index",
+            "path":"/",
+            "name":"index",
+            "ext":".md",
+            "href":"/index.md"
+          },{
+            "folder": "test",
+            "childs":[{
+              "title":"test-file1",
+              "path":"/test/",
+              "name":"file1",
+              "ext":".md",
+              "href":"/test/file1.md"
+            },{
+              "title":"test-file2",
+              "path":"/test/",
+              "name":"file2",
+              "ext":".md",
+              "href":"/test/file2.md"
+            },{
+              "title":"test-index",
+              "path":"/test/",
+              "name":"index",
+              "ext":".md",
+              "href":"/test/index.md"
+            }]
+          }]
+        };
+      function bckRef(node) {
+        node.childs && node.childs.forEach(function (child) {
+          child.parent = node;
+          bckRef(child);
+        });
+      }
+      bckRef(expected);
       gulp.src(__dirname + '/fixtures/**/*.md', {buffer: true})
         .pipe(mdvars())
         .pipe(vartree({
@@ -479,11 +600,124 @@ describe('gulp-mdvars', function() {
           parentProp: 'parent'
         }))
         .pipe(es.wait(function(){
+          deepEq(root, expected);
           assert(root.childs.some(function(scope1) {
             return scope1.childs&&scope1.childs.every(function(scope2) {
               return scope2.parent === scope1;
             });
           }));
+          done();
+        }));
+    });
+
+    it('create a sorted vartree when options.sortProp and options.sortDesc is set to false', function(done) {
+      var root = {};
+      gulp.src(__dirname + '/fixtures/**/*.md', {buffer: true})
+        .pipe(mdvars())
+        .pipe(vartree({
+          root: root,
+          sortProp: 'name',
+          sortDesc: false
+        }))
+        .pipe(es.wait(function(){
+          deepEq(root,{
+            "childs":[{
+              "title":"file1",
+              "path":"/",
+              "name":"file1",
+              "ext":".md",
+              "href":"/file1.md"
+            },{
+              "title":"file2",
+              "path":"/",
+              "name":"file2",
+              "ext":".md",
+              "href":"/file2.md"
+            },{
+              "title":"index",
+              "path":"/",
+              "name":"index",
+              "ext":".md",
+              "href":"/index.md"
+            },{
+              "childs":[{
+                "title":"test-file1",
+                "path":"/test/",
+                "name":"file1",
+                "ext":".md",
+                "href":"/test/file1.md"
+              },{
+                "title":"test-file2",
+                "path":"/test/",
+                "name":"file2",
+                "ext":".md",
+                "href":"/test/file2.md"
+              },{
+                "title":"test-index",
+                "path":"/test/",
+                "name":"index",
+                "ext":".md",
+                "href":"/test/index.md"
+              }],
+              "folder":"test"
+            }]
+          });
+          done();
+        }));
+    });
+
+    it('create a sorted vartree when options.sortProp and options.sortDesc is set to true', function(done) {
+      var root = {};
+      gulp.src(__dirname + '/fixtures/**/*.md', {buffer: true})
+        .pipe(mdvars())
+        .pipe(vartree({
+          root: root,
+          sortProp: 'name',
+          sortDesc: true
+        }))
+        .pipe(es.wait(function(){
+          deepEq(root,{
+            "childs":[{
+              "childs":[{
+                "title":"test-index",
+                "path":"/test/",
+                "name":"index",
+                "ext":".md",
+                "href":"/test/index.md"
+              },{
+                "title":"test-file2",
+                "path":"/test/",
+                "name":"file2",
+                "ext":".md",
+                "href":"/test/file2.md"
+              },{
+                "title":"test-file1",
+                "path":"/test/",
+                "name":"file1",
+                "ext":".md",
+                "href":"/test/file1.md"
+              }],
+              "folder":"test"
+            },{
+              "title":"index",
+              "path":"/",
+              "name":"index",
+              "ext":".md",
+              "href":"/index.md"
+            },{
+              "title":"file2",
+              "path":"/",
+              "name":"file2",
+              "ext":".md",
+              "href":"/file2.md"
+            },{
+              "title":"file1",
+              "path":"/",
+              "name":"file1",
+              "ext":".md",
+              "href":"/file1.md"
+            }]
+          });
           done();
         }));
     });
