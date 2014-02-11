@@ -24,7 +24,7 @@ function recSort(root, childProp) {
   return root;
 }
 
-describe('gulp-mdvars', function() {
+describe('gulp-vartree', function() {
 
   describe('with null contents', function() {
 
@@ -67,6 +67,133 @@ describe('gulp-mdvars', function() {
             }));
         }))
         .pipe(es.wait(function(){
+          deepEq(recSort(root),recSort({
+            "childs":[{
+              "title":"file1",
+              "path":"/",
+              "name":"file1",
+              "ext":".md",
+              "href":"/file1.md"
+            },{
+              "title":"file2",
+              "path":"/",
+              "name":"file2",
+              "ext":".md",
+              "href":"/file2.md"
+            },{
+              "title":"index",
+              "path":"/",
+              "name":"index",
+              "ext":".md",
+              "href":"/index.md"
+            },{
+              "folder":"test",
+              "childs":[{
+                "title":"test-file1",
+                "path":"/test/",
+                "name":"file1",
+                "ext":".md",
+                "href":"/test/file1.md"
+              },{
+                "title":"test-file2",
+                "path":"/test/",
+                "name":"file2",
+                "ext":".md",
+                "href":"/test/file2.md"
+              },{
+                "title":"test-index",
+                "path":"/test/",
+                "name":"index",
+                "ext":".md",
+                "href":"/test/index.md"
+              }]
+            }]
+          }));
+          done();
+        }));
+    });
+
+    it('work when using the base option', function(done) {
+      var root = {};
+      gulp.src(__dirname + '/**/*.md', {buffer: false})
+        .pipe(mdvars())
+        .pipe(vartree({
+          root: root,
+          base: 'fixtures'
+        }))
+        .pipe(es.map(function(file, cb){
+          file.contents.pipe(es.wait(function(err, data) {
+              cb(null, file);
+            }));
+        }))
+        .pipe(es.wait(function(){
+          deepEq(recSort(root),recSort({
+            "childs":[{
+              "title":"file1",
+              "path":"/",
+              "name":"file1",
+              "ext":".md",
+              "href":"/file1.md"
+            },{
+              "title":"file2",
+              "path":"/",
+              "name":"file2",
+              "ext":".md",
+              "href":"/file2.md"
+            },{
+              "title":"index",
+              "path":"/",
+              "name":"index",
+              "ext":".md",
+              "href":"/index.md"
+            },{
+              "folder":"test",
+              "childs":[{
+                "title":"test-file1",
+                "path":"/test/",
+                "name":"file1",
+                "ext":".md",
+                "href":"/test/file1.md"
+              },{
+                "title":"test-file2",
+                "path":"/test/",
+                "name":"file2",
+                "ext":".md",
+                "href":"/test/file2.md"
+              },{
+                "title":"test-index",
+                "path":"/test/",
+                "name":"index",
+                "ext":".md",
+                "href":"/test/index.md"
+              }]
+            }]
+          }));
+          done();
+        }));
+    });
+
+    it('emit custopm event whith the varEvent option', function(done) {
+      var root = {}
+        , filled = false
+      ;
+      gulp.src(__dirname + '/fixtures/**/*.md', {buffer: false})
+        .pipe(mdvars({
+          varEvent: 'filled'
+        }))
+        .pipe(vartree({
+          root: root,
+          varEvent: 'filled'
+        })).on('filled', function() {
+          filled = true;
+        })
+        .pipe(es.map(function(file, cb){
+          file.contents.pipe(es.wait(function(err, data) {
+              cb(null, file);
+            }));
+        }))
+        .pipe(es.wait(function(){
+          assert(filled);
           deepEq(recSort(root),recSort({
             "childs":[{
               "title":"file1",
@@ -720,6 +847,34 @@ describe('gulp-mdvars', function() {
           });
           done();
         }));
+    });
+
+  });
+
+  describe('misused', function() {
+
+    it('throw an error when no root is given', function() {
+      assert.throws(function() {
+        gulp.src(__dirname + '/fixtures/**/*.md', {buffer: true})
+          .pipe(mdvars())
+          .pipe(vartree());
+      });
+    });
+
+    it('emit an error when base doesn\'t fit', function(done) {
+      var errored = false;
+      gulp.src(__dirname + '/fixtures/**/*.md', {buffer: true})
+        .pipe(mdvars())
+        .pipe(
+          vartree({
+            root: {},
+            base: '/pipoaazd'
+          })
+          .on('error', function(err) {
+            done();
+          })
+        )
+        .pipe(es.wait(function(){}));
     });
 
   });

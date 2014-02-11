@@ -31,6 +31,8 @@ function gulpVartree(options) {
   options.extProp = options.extProp || 'ext';
   options.hrefProp = options.hrefProp || 'href';
 
+  options.base = options.base || '';
+
   options.sortDesc = options.sortDesc || false;
 
   // Property to look for vars
@@ -70,21 +72,22 @@ function gulpVartree(options) {
       return;
     }
 
-    // Determining the file base
-    var base = Path.dirname(file.path);
+    // Determining the file path
+    var path = Path.dirname(file.path);
     if(file.base) {
-      base = Path.relative(file.base, base);
+      path = Path.relative(file.base, path);
     }
-    if(options.base) {
-      if(-1 === base.indexOf(options.base)) {
-        this.emit('error', new PluginError(PLUGIN_NAME,
-          'The given base do not fit with the files base ('+ file.path + ')'));
+    if('' !== options.base) {
+      if(0 !== path.indexOf(options.base)) {
+        stream.emit('error', new gutil.PluginError(PLUGIN_NAME,
+          'The given base do not fit with the files base ('+ path + ')'));
+        return cb();
       }
-      base = base.substr(options.base.length);
+      path = path.substring(options.base.length);
     }
 
     // Creating the necessary tree
-    var folders = base.split(Path.sep);
+    var folders = path.split(Path.sep);
     var curScope = root;
     var folder;
     var parent;
@@ -118,9 +121,10 @@ function gulpVartree(options) {
     function populateVars() {
         var obj = file[options.prop] || {};
         obj[options.nameProp] = Path.basename(file.path, Path.extname(file.path));
-        obj[options.pathProp] = Path.relative(file.base, Path.dirname(file.path));
+        obj[options.pathProp] = path;
         if(obj[options.pathProp]) {
-          obj[options.pathProp] = '/' + obj[options.pathProp] + '/';
+          obj[options.pathProp] = ('/' !== obj[options.pathProp][0] ? '/' : '')
+            + obj[options.pathProp] + '/';
         } else {
           obj[options.pathProp] = '/';
         }
@@ -150,7 +154,7 @@ function gulpVartree(options) {
     // Populate vars when the event is emitted if dealing with streams
     if(file.isStream()) {
       files.push(file);
-      file.contents.on(options.varEvent, function() {
+      file.contents.on('end', function() { // should be options.varEvent when mdvar will be rady
         populateVars();
         files.splice(files.indexOf(file));
         if(!files.length) {
@@ -163,7 +167,7 @@ function gulpVartree(options) {
     } else {
       populateVars();
     }
-    this.push(file);
+    stream.push(file);
     cb();
   };
 

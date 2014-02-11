@@ -1,10 +1,12 @@
 {
   "name": "gulp-vartree",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Create a variable tree from the property values of given files.",
   "main": "src/index.js",
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha tests/*.mocha.js"
+    "test": "./node_modules/mocha/bin/mocha tests/*.mocha.js",
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- tests/*.mocha.js -R spec -t 5000 && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "cover": "istanbul cover ./node_modules/mocha/bin/_mocha --report html -- tests/*.mocha.js -R spec -t 5000"
   },
   "keywords": [
     "gulpplugin",
@@ -32,11 +34,14 @@
     }
   ],
   "dependencies": {
-    "gulp-util": "~2.2.0"
+    "gulp-util": "~2.2.14"
   },
   "devDependencies": {
-    "event-stream": "~3.0.20",
-    "mocha": "~1.16.2",
+    "mocha": "~1.17.1",
+    "event-stream": "~3.1.0",
+    "mocha-lcov-reporter": "0.0.1",
+    "coveralls": "~2.7.1",
+    "istanbul": "~0.2.4",
     "gulp-mdvars": "0.0.1",
     "gulp": "~3.2.4",
     "varstream": "~0.2.2"
