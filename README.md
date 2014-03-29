@@ -128,3 +128,9 @@ Default value: `'end'`
 
 For stream mode only. Indicating wich event must be listen to be sure that the
  vars are populated into the files in order to keep them.
+
+## Stats
+
+[![NPM](https://nodei.co/npm/gulp-vartree.png?downloads=true&stars=true)](https://nodei.co/npm/gulp-iconfont/)
+[![NPM](https://nodei.co/npm-dl/gulp-vartree.png)](https://nodei.co/npm/gulp-iconfont/)
+
