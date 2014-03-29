@@ -1,5 +1,5 @@
 var gutil = require('gulp-util')
-  , Stream = require('stream')
+  , Stream = require('readable-stream')
   , Path = require('path')
 ;
 
@@ -19,7 +19,7 @@ function gulpVartree(options) {
       'Please provide an Object to put the vartree in.');
   }
 
-  root = options.root
+  root = options.root;
 
   options.childsProp = options.childsProp || 'childs';
 
@@ -142,6 +142,7 @@ function gulpVartree(options) {
           file[options.prop] = curScope;
         } else {
           // Add a reference to the parent scope
+          console.log(file, file.metas);
           if(options.parentProp) {
             file[options.prop][options.parentProp] = curScope;
           }
@@ -186,3 +187,4 @@ function gulpVartree(options) {
 }
 
 module.exports = gulpVartree;
+
