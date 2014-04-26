@@ -1,6 +1,6 @@
 {
   "name": "gulp-vartree",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Create a variable tree from the property values of given files.",
   "main": "src/index.js",
   "scripts": {
@@ -43,8 +43,8 @@
     "mocha-lcov-reporter": "0.0.1",
     "coveralls": "~2.10.0",
     "istanbul": "~0.2.6",
-    "gulp-mdvars": "0.0.333",
+    "gulp-mdvars": "0.0.4",
     "gulp": "~3.6.0",
-    "varstream": "~0.2.4444"
+    "varstream": "~0.2.5"
   }
 }

@@ -131,6 +131,6 @@ For stream mode only. Indicating wich event must be listen to be sure that the
 
 ## Stats
 
-[![NPM](https://nodei.co/npm/gulp-vartree.png?downloads=true&stars=true)](https://nodei.co/npm/gulp-iconfont/)
-[![NPM](https://nodei.co/npm-dl/gulp-vartree.png)](https://nodei.co/npm/gulp-iconfont/)
+[![NPM](https://nodei.co/npm/gulp-vartree.png?downloads=true&stars=true)](https://nodei.co/npm/gulp-vartree/)
+[![NPM](https://nodei.co/npm-dl/gulp-vartree.png)](https://nodei.co/npm/gulp-vartree/)
 
