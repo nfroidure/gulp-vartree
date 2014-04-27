@@ -21,11 +21,11 @@ var root = {};
 gulp.task('vartree', function() {
   gulp.src(['assets/contents/*.md'])
     .pipe(mdvars({
-      prop: 'meta' // will put meta datas in the file.meta property
+      prop: 'meta' // will put metadata in the file.meta property
     })
     .pipe(vartree({
-      root: root, // the root in wich the vartree will be put
-      prop: 'metas', // catch the data property
+      root: root, // the root in which the vartree will be put
+      prop: 'metas', // metadata property to collect
       parent: 'parent' // keep a ref to the parent scope in the file.parent property
     }))
     .pipe(marked()) // Do whatever you want with the files later
@@ -34,7 +34,9 @@ gulp.task('vartree', function() {
     });
 });
 ```
-The created variable tree looks like that:
+
+The created variable tree looks like this:
+
 ```js
 {
   "title":"index",
@@ -52,18 +54,21 @@ The created variable tree looks like that:
   ]
 }
 ```
-for the following directory tree :
+
+for the following directory structure :
 
 * index.md
 * file1.md
 * file2.md
-* * index.md
-* * file1.md
-* * file2.md
+* test/
+  * index.md
+  * file1.md
+  * file2.md
 
 `gulp-vartree` can be used with
- [gulp-mdvars](https://github.com/nfroidure/gulp-mdvars) but also with any Gulp
- plugin putting any data to any file property.
+ [gulp-mdvars](https://github.com/nfroidure/gulp-mdvars), or with any Gulp
+ plugin that places data in a file property, such as
+ [gulp-frontmatter](https://www.npmjs.org/package/gulp-front-matter).
 
 ## API
 
@@ -78,55 +83,73 @@ An object used as the root of the collected tree.
 Type: `String`
 Default value: `'metas'`
 
-Indicating in wich property metadatas must be looked for.
+Indicates which property metadata will be collected from.
 
 #### options.base
 Type: `String`
 
-The base directory you want the tree to begin.
+The base directory where you want the tree to begin.
 
 #### options.parentProp
 Type: `String`
 
-Indicating the name of the property in wich you want to keep a reference to the
- parent scope. This property is not populated per default.
+Indicates the name of the property in which you want to keep a reference to the
+ parent scope. This property is not populated per default, because using it will
+ make the tree structure circular (and this interferes with e.g. serialization).
 
 #### options.childsProp
 Type: `String`
 Default value: `'childs'`
 
-Indicating in wich property childs must pushed.
+Indicates which property children will be pushed to.
 
 #### options.pathProp
 Type: `String`
 Default value: `'path'`
 
-Indicating in wich property the file path will be set.
+Indicates which property shall contain the file path.
 
 #### options.nameProp
 Type: `String`
 Default value: `'name'`
 
-Indicating in wich property the file name will be set.
+Indicates which property shall contain the file name.
 
 #### options.extProp
 Type: `String`
 Default value: `'ext'`
 
-Indicating in wich property the file extension will be set.
+Indicates which property shall contain the file extension.
 
 #### options.hrefProp
 Type: `String`
 Default value: `'href'`
 
-Indicating in wich property the file href will be set.
+Indicates which property shall contain the file href.
 
+#### options.folderProp
+Type: `String`
+Default: Value: `'folder'`
+
+This property will be used to indicate nodes that are directories.
+
+#### options.sortProp
+Type: `String`
+Default value: `undefined`
+
+If sorting is desired, the metadata property to sort the tree by.
+
+#### options.sortDesc
+Type: `Boolean`
+Default value: `false`
+
+If true, the tree will be sorted in descending order instead of ascending order.
 
 #### options.varEvent
 Type: `String`
 Default value: `'end'`
 
-For stream mode only. Indicating wich event must be listen to be sure that the
+For stream mode only. Indicates which event must be listened for to be sure that the
  vars are populated into the files in order to keep them.
 
 ## Stats
