@@ -57,9 +57,10 @@ for the following directory tree :
 * index.md
 * file1.md
 * file2.md
-* * index.md
-* * file1.md
-* * file2.md
+* test/
+  * index.md
+  * file1.md
+  * file2.md
 
 `gulp-vartree` can be used with
  [gulp-mdvars](https://github.com/nfroidure/gulp-mdvars) but also with any Gulp
