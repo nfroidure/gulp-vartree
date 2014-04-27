@@ -142,7 +142,6 @@ function gulpVartree(options) {
           file[options.prop] = curScope;
         } else {
           // Add a reference to the parent scope
-          console.log(file, file.metas);
           if(options.parentProp) {
             file[options.prop][options.parentProp] = curScope;
           }
