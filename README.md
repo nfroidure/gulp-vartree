@@ -22,7 +22,7 @@ gulp.task('vartree', function() {
   gulp.src(['assets/contents/*.md'])
     .pipe(mdvars({
       prop: 'meta' // will put metadata in the file.meta property
-    })
+    }))
     .pipe(vartree({
       root: root, // the root in which the vartree will be put
       prop: 'metas', // metadata property to collect
