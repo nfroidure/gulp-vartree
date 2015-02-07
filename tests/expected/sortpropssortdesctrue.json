@@ -1,0 +1,43 @@
+{
+  "childs":[{
+    "title":"index",
+    "name":"index",
+    "path":"/",
+    "ext":".md",
+    "href":"/index.md"
+  },{
+    "title":"file2",
+    "name":"file2",
+    "path":"/",
+    "ext":".md",
+    "href":"/file2.md"
+  },{
+    "title":"file1",
+    "name":"file1",
+    "path":"/",
+    "ext":".md",
+    "href":"/file1.md"
+  },{
+    "folder":"test",
+    "childs":[{
+      "title":"test-index",
+      "name":"index",
+      "path":"/test/",
+      "ext":".md",
+      "href":"/test/index.md"
+    },{
+      "title":"test-file2",
+      "name":"file2",
+      "path":"/test/",
+      "ext":".md",
+      "href":"/test/file2.md"
+    },{
+      "title":"test-file1",
+      "name":"file1",
+      "path":"/test/",
+      "ext":".md",
+      "href":"/test/file1.md"
+    }]
+  }]
+}
+
