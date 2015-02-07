@@ -63,48 +63,10 @@ describe('gulp-vartree', function() {
             }));
         }))
         .pipe(es.wait(function(){
-          neatEqual(recSort(root),recSort({
-            "childs":[{
-              "title":"file1",
-              "path":"/",
-              "name":"file1",
-              "ext":".md",
-              "href":"/file1.md"
-            },{
-              "title":"file2",
-              "path":"/",
-              "name":"file2",
-              "ext":".md",
-              "href":"/file2.md"
-            },{
-              "title":"index",
-              "path":"/",
-              "name":"index",
-              "ext":".md",
-              "href":"/index.md"
-            },{
-              "folder":"test",
-              "childs":[{
-                "title":"test-file1",
-                "path":"/test/",
-                "name":"file1",
-                "ext":".md",
-                "href":"/test/file1.md"
-              },{
-                "title":"test-file2",
-                "path":"/test/",
-                "name":"file2",
-                "ext":".md",
-                "href":"/test/file2.md"
-              },{
-                "title":"test-index",
-                "path":"/test/",
-                "name":"index",
-                "ext":".md",
-                "href":"/test/index.md"
-              }]
-            }]
-          }));
+          neatEqual(
+            recSort(root),
+            recSort(JSON.parse(fs.readFileSync(__dirname + '/expected/simple.json', 'utf-8')))
+          );
           done();
         }));
     });
@@ -123,48 +85,10 @@ describe('gulp-vartree', function() {
             }));
         }))
         .pipe(es.wait(function(){
-          neatEqual(recSort(root),recSort({
-            "childs":[{
-              "title":"file1",
-              "path":"/",
-              "name":"file1",
-              "ext":".md",
-              "href":"/file1.md"
-            },{
-              "title":"file2",
-              "path":"/",
-              "name":"file2",
-              "ext":".md",
-              "href":"/file2.md"
-            },{
-              "title":"index",
-              "path":"/",
-              "name":"index",
-              "ext":".md",
-              "href":"/index.md"
-            },{
-              "folder":"test",
-              "childs":[{
-                "title":"test-file1",
-                "path":"/test/",
-                "name":"file1",
-                "ext":".md",
-                "href":"/test/file1.md"
-              },{
-                "title":"test-file2",
-                "path":"/test/",
-                "name":"file2",
-                "ext":".md",
-                "href":"/test/file2.md"
-              },{
-                "title":"test-index",
-                "path":"/test/",
-                "name":"index",
-                "ext":".md",
-                "href":"/test/index.md"
-              }]
-            }]
-          }));
+          neatEqual(
+            recSort(root),
+            recSort(JSON.parse(fs.readFileSync(__dirname + '/expected/base.json', 'utf-8')))
+          );
           done();
         }));
     });
@@ -190,48 +114,10 @@ describe('gulp-vartree', function() {
         }))
         .pipe(es.wait(function(){
           assert(filled);
-          neatEqual(recSort(root),recSort({
-            "childs":[{
-              "title":"file1",
-              "path":"/",
-              "name":"file1",
-              "ext":".md",
-              "href":"/file1.md"
-            },{
-              "title":"file2",
-              "path":"/",
-              "name":"file2",
-              "ext":".md",
-              "href":"/file2.md"
-            },{
-              "title":"index",
-              "path":"/",
-              "name":"index",
-              "ext":".md",
-              "href":"/index.md"
-            },{
-              "folder":"test",
-              "childs":[{
-                "title":"test-file1",
-                "path":"/test/",
-                "name":"file1",
-                "ext":".md",
-                "href":"/test/file1.md"
-              },{
-                "title":"test-file2",
-                "path":"/test/",
-                "name":"file2",
-                "ext":".md",
-                "href":"/test/file2.md"
-              },{
-                "title":"test-index",
-                "path":"/test/",
-                "name":"index",
-                "ext":".md",
-                "href":"/test/index.md"
-              }]
-            }]
-          }));
+          neatEqual(
+            recSort(root),
+            recSort(JSON.parse(fs.readFileSync(__dirname + '/expected/simple.json', 'utf-8')))
+          );
           done();
         }));
     });
@@ -250,48 +136,10 @@ describe('gulp-vartree', function() {
           }));
         }))
         .pipe(es.wait(function(){
-          neatEqual(recSort(root, '__childs'),recSort({
-            "__childs":[{
-              "__childs":[{
-                "title":"test-file1",
-                "path":"/test/",
-                "name":"file1",
-                "ext":".md",
-                "href":"/test/file1.md"
-              },{
-                "title":"test-file2",
-                "path":"/test/",
-                "name":"file2",
-                "ext":".md",
-                "href":"/test/file2.md"
-              },{
-                "title":"test-index",
-                "path":"/test/",
-                "name":"index",
-                "ext":".md",
-                "href":"/test/index.md"
-              }],
-              "folder":"test"
-            },{
-              "title":"file1",
-              "path":"/",
-              "name":"file1",
-              "ext":".md",
-              "href":"/file1.md"
-            },{
-              "title":"file2",
-              "path":"/",
-              "name":"file2",
-              "ext":".md",
-              "href":"/file2.md"
-            },{
-              "title":"index",
-              "path":"/",
-              "name":"index",
-              "ext":".md",
-              "href":"/index.md"
-            }],
-          }, '__childs'));
+          neatEqual(
+            recSort(root, '__childs'),
+            recSort(JSON.parse(fs.readFileSync(__dirname + '/expected/childsprop.json', 'utf-8')), '__childs')
+          );
           done();
         }));
     });
@@ -311,48 +159,10 @@ describe('gulp-vartree', function() {
           }));
         }))
         .pipe(es.wait(function(){
-          neatEqual(root,{
-            "childs":[{
-              "title":"file1",
-              "path":"/",
-              "name":"file1",
-              "ext":".md",
-              "href":"/file1.md"
-            },{
-              "title":"file2",
-              "path":"/",
-              "name":"file2",
-              "ext":".md",
-              "href":"/file2.md"
-            },{
-              "title":"index",
-              "path":"/",
-              "name":"index",
-              "ext":".md",
-              "href":"/index.md"
-            },{
-              "childs":[{
-                "title":"test-file1",
-                "path":"/test/",
-                "name":"file1",
-                "ext":".md",
-                "href":"/test/file1.md"
-              },{
-                "title":"test-file2",
-                "path":"/test/",
-                "name":"file2",
-                "ext":".md",
-                "href":"/test/file2.md"
-              },{
-                "title":"test-index",
-                "path":"/test/",
-                "name":"index",
-                "ext":".md",
-                "href":"/test/index.md"
-              }],
-              "folder":"test"
-            }]
-          });
+          neatEqual(
+            recSort(root),
+            recSort(JSON.parse(fs.readFileSync(__dirname + '/expected/sortpropssortdescfalse.json', 'utf-8')))
+          );
           done();
         }));
     });
@@ -372,48 +182,11 @@ describe('gulp-vartree', function() {
           }));
         }))
         .pipe(es.wait(function(){
-          neatEqual(root,{
-            "childs":[{
-              "childs":[{
-                "title":"test-index",
-                "path":"/test/",
-                "name":"index",
-                "ext":".md",
-                "href":"/test/index.md"
-              },{
-                "title":"test-file2",
-                "path":"/test/",
-                "name":"file2",
-                "ext":".md",
-                "href":"/test/file2.md"
-              },{
-                "title":"test-file1",
-                "path":"/test/",
-                "name":"file1",
-                "ext":".md",
-                "href":"/test/file1.md"
-              }],
-              "folder":"test"
-            },{
-              "title":"index",
-              "path":"/",
-              "name":"index",
-              "ext":".md",
-              "href":"/index.md"
-            },{
-              "title":"file2",
-              "path":"/",
-              "name":"file2",
-              "ext":".md",
-              "href":"/file2.md"
-            },{
-              "title":"file1",
-              "path":"/",
-              "name":"file1",
-              "ext":".md",
-              "href":"/file1.md"
-            }]
-          });
+        console.log(JSON.stringify(root))
+          neatEqual(
+            recSort(root),
+            recSort(JSON.parse(fs.readFileSync(__dirname + '/expected/sortpropssortdesctrue.json', 'utf-8')))
+          );
           done();
         }));
     });
@@ -432,48 +205,12 @@ describe('gulp-vartree', function() {
             }));
         }))
         .pipe(es.wait(function(){
-          neatEqual(recSort(root),recSort({
-            "childs":[{
-              "childs":[{
-                "title":"test-file1",
-                "path":"/test/",
-                "name":"file1",
-                "ext":".md",
-                "href":"/test/file1.md"
-              },{
-                "title":"test-file2",
-                "path":"/test/",
-                "name":"file2",
-                "ext":".md",
-                "href":"/test/file2.md"
-              }],
-              "title":"test-index",
-              "folder":"test",
-              "path":"/test/",
-              "name":"index",
-              "ext":".md",
-              "href":"/test/index.md"
-            },{
-              "title":"file1",
-              "path":"/",
-              "name":"file1",
-              "ext":".md",
-              "href":"/file1.md"
-            },{
-              "title":"file2",
-              "path":"/",
-              "name":"file2",
-              "ext":".md",
-              "href":"/file2.md"
-            }],
-            "title":"index",
-            "path":"/",
-            "name":"index",
-            "ext":".md",
-            "href":"/index.md"
-          }));
+          neatEqual(
+            recSort(root),
+            recSort(JSON.parse(fs.readFileSync(__dirname + '/expected/indexed.json', 'utf-8')))
+          );
           done();
-        }));
+        }))
     });
 
     it('create a reference to parent when option.parentProp is set', function(done) {
@@ -511,48 +248,10 @@ describe('gulp-vartree', function() {
           root: root
         }))
         .pipe(es.wait(function(){
-          neatEqual(root,{
-            "childs":[{
-              "title":"file1",
-              "path":"/",
-              "name":"file1",
-              "ext":".md",
-              "href":"/file1.md"
-            },{
-              "title":"file2",
-              "path":"/",
-              "name":"file2",
-              "ext":".md",
-              "href":"/file2.md"
-            },{
-              "title":"index",
-              "path":"/",
-              "name":"index",
-              "ext":".md",
-              "href":"/index.md"
-            },{
-              "folder":"test",
-              "childs":[{
-                "title":"test-file1",
-                "path":"/test/",
-                "name":"file1",
-                "ext":".md",
-                "href":"/test/file1.md"
-              },{
-                "title":"test-file2",
-                "path":"/test/",
-                "name":"file2",
-                "ext":".md",
-                "href":"/test/file2.md"
-              },{
-                "title":"test-index",
-                "path":"/test/",
-                "name":"index",
-                "ext":".md",
-                "href":"/test/index.md"
-              }]
-            }]
-          });
+          neatEqual(
+            recSort(root),
+            recSort(JSON.parse(fs.readFileSync(__dirname + '/expected/buffer-simple.json', 'utf-8')))
+          );
           done();
         }));
     });
@@ -566,48 +265,10 @@ describe('gulp-vartree', function() {
           childsProp: '__childs'
         }))
         .pipe(es.wait(function(){
-          neatEqual(root,{
-            "__childs":[{
-              "title":"file1",
-              "path":"/",
-              "name":"file1",
-              "ext":".md",
-              "href":"/file1.md"
-            },{
-              "title":"file2",
-              "path":"/",
-              "name":"file2",
-              "ext":".md",
-              "href":"/file2.md"
-            },{
-              "title":"index",
-              "path":"/",
-              "name":"index",
-              "ext":".md",
-              "href":"/index.md"
-            },{
-              "folder":"test",
-              "__childs":[{
-                "title":"test-file1",
-                "path":"/test/",
-                "name":"file1",
-                "ext":".md",
-                "href":"/test/file1.md"
-              },{
-                "title":"test-file2",
-                "path":"/test/",
-                "name":"file2",
-                "ext":".md",
-                "href":"/test/file2.md"
-              },{
-                "title":"test-index",
-                "path":"/test/",
-                "name":"index",
-                "ext":".md",
-                "href":"/test/index.md"
-              }]
-            }]
-          });
+          neatEqual(
+            recSort(root, '__childs'),
+            recSort(JSON.parse(fs.readFileSync(__dirname + '/expected/buffer-childsprop.json', 'utf-8')), '__childs')
+          );
           done();
         }));
     });
@@ -621,94 +282,17 @@ describe('gulp-vartree', function() {
           index: 'index'
         }))
         .pipe(es.wait(function(){
-          neatEqual(root,{
-            "childs":[{
-              "title":"file1",
-              "path":"/",
-              "name":"file1",
-              "ext":".md",
-              "href":"/file1.md"
-            },{
-              "title":"file2",
-              "path":"/",
-              "name":"file2",
-              "ext":".md",
-              "href":"/file2.md"
-            },{
-              "childs":[{
-                "title":"test-file1",
-                "path":"/test/",
-                "name":"file1",
-                "ext":".md",
-                "href":"/test/file1.md"
-              },{
-                "title":"test-file2",
-                "path":"/test/",
-                "name":"file2",
-                "ext":".md",
-                "href":"/test/file2.md"
-              }],
-              "title":"test-index",
-              "folder":"test",
-              "path":"/test/",
-              "name":"index",
-              "ext":".md",
-              "href":"/test/index.md"
-            }],
-            "title":"index",
-            "path":"/",
-            "name":"index",
-            "ext":".md",
-            "href":"/index.md"
-          });
+          neatEqual(
+            recSort(root),
+            recSort(JSON.parse(fs.readFileSync(__dirname + '/expected/buffer-indexed.json', 'utf-8')))
+          );
           done();
         }));
     });
 
     it('create a reference to parent when option.parentProp is set', function(done) {
       var root = {}
-        , expected = {
-          "childs":[{
-            "title":"file1",
-            "path":"/",
-            "name":"file1",
-            "ext":".md",
-            "href":"/file1.md"
-          },{
-            "title":"file2",
-            "path":"/",
-            "name":"file2",
-            "ext":".md",
-            "href":"/file2.md"
-          },{
-            "title":"index",
-            "path":"/",
-            "name":"index",
-            "ext":".md",
-            "href":"/index.md"
-          },{
-            "folder": "test",
-            "childs":[{
-              "title":"test-file1",
-              "path":"/test/",
-              "name":"file1",
-              "ext":".md",
-              "href":"/test/file1.md"
-            },{
-              "title":"test-file2",
-              "path":"/test/",
-              "name":"file2",
-              "ext":".md",
-              "href":"/test/file2.md"
-            },{
-              "title":"test-index",
-              "path":"/test/",
-              "name":"index",
-              "ext":".md",
-              "href":"/test/index.md"
-            }]
-          }]
-        };
+        , expected = JSON.parse(fs.readFileSync(__dirname + '/expected/buffer-parentprop.json', 'utf-8'));
       function bckRef(node) {
         node.childs && node.childs.forEach(function (child) {
           child.parent = node;
@@ -743,48 +327,10 @@ describe('gulp-vartree', function() {
           sortDesc: false
         }))
         .pipe(es.wait(function(){
-          neatEqual(root,{
-            "childs":[{
-              "title":"file1",
-              "path":"/",
-              "name":"file1",
-              "ext":".md",
-              "href":"/file1.md"
-            },{
-              "title":"file2",
-              "path":"/",
-              "name":"file2",
-              "ext":".md",
-              "href":"/file2.md"
-            },{
-              "title":"index",
-              "path":"/",
-              "name":"index",
-              "ext":".md",
-              "href":"/index.md"
-            },{
-              "childs":[{
-                "title":"test-file1",
-                "path":"/test/",
-                "name":"file1",
-                "ext":".md",
-                "href":"/test/file1.md"
-              },{
-                "title":"test-file2",
-                "path":"/test/",
-                "name":"file2",
-                "ext":".md",
-                "href":"/test/file2.md"
-              },{
-                "title":"test-index",
-                "path":"/test/",
-                "name":"index",
-                "ext":".md",
-                "href":"/test/index.md"
-              }],
-              "folder":"test"
-            }]
-          });
+          neatEqual(
+            recSort(root),
+            recSort(JSON.parse(fs.readFileSync(__dirname + '/expected/buffer-sortpropssortdescfalse.json', 'utf-8')))
+          );
           done();
         }));
     });
@@ -799,48 +345,10 @@ describe('gulp-vartree', function() {
           sortDesc: true
         }))
         .pipe(es.wait(function(){
-          neatEqual(root,{
-            "childs":[{
-              "childs":[{
-                "title":"test-index",
-                "path":"/test/",
-                "name":"index",
-                "ext":".md",
-                "href":"/test/index.md"
-              },{
-                "title":"test-file2",
-                "path":"/test/",
-                "name":"file2",
-                "ext":".md",
-                "href":"/test/file2.md"
-              },{
-                "title":"test-file1",
-                "path":"/test/",
-                "name":"file1",
-                "ext":".md",
-                "href":"/test/file1.md"
-              }],
-              "folder":"test"
-            },{
-              "title":"index",
-              "path":"/",
-              "name":"index",
-              "ext":".md",
-              "href":"/index.md"
-            },{
-              "title":"file2",
-              "path":"/",
-              "name":"file2",
-              "ext":".md",
-              "href":"/file2.md"
-            },{
-              "title":"file1",
-              "path":"/",
-              "name":"file1",
-              "ext":".md",
-              "href":"/file1.md"
-            }]
-          });
+          neatEqual(
+            recSort(root),
+            recSort(JSON.parse(fs.readFileSync(__dirname + '/expected/buffer-sortpropssortdesctrue.json', 'utf-8')))
+          );
           done();
         }));
     });
