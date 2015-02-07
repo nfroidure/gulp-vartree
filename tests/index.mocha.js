@@ -10,7 +10,8 @@ var fs = require('fs')
 
 function deepEq(a, b) {
   assert.equal(VarStream.stringify(a).split(/\r?\n/).sort().join('\n'),
-    VarStream.stringify(b).split(/\r?\n/).sort().join('\n'));
+    VarStream.stringify(b).split(/\r?\n/).sort().join('\n')
+  );
 }
 function recSort(root, childProp) {
   childProp = childProp || 'childs';
