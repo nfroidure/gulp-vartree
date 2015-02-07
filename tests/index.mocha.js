@@ -5,14 +5,9 @@ var fs = require('fs')
   , vartree = require('../src/index')
   , mdvars = require('gulp-mdvars')
   , assert = require('assert')
-  , VarStream = require('varstream')
+  , neatEqual = require('neatequal')
 ;
 
-function deepEq(a, b) {
-  assert.equal(VarStream.stringify(a).split(/\r?\n/).sort().join('\n'),
-    VarStream.stringify(b).split(/\r?\n/).sort().join('\n')
-  );
-}
 function recSort(root, childProp) {
   childProp = childProp || 'childs';
   root[childProp].sort(function(childA, childB) {
@@ -68,7 +63,7 @@ describe('gulp-vartree', function() {
             }));
         }))
         .pipe(es.wait(function(){
-          deepEq(recSort(root),recSort({
+          neatEqual(recSort(root),recSort({
             "childs":[{
               "title":"file1",
               "path":"/",
@@ -128,7 +123,7 @@ describe('gulp-vartree', function() {
             }));
         }))
         .pipe(es.wait(function(){
-          deepEq(recSort(root),recSort({
+          neatEqual(recSort(root),recSort({
             "childs":[{
               "title":"file1",
               "path":"/",
@@ -174,7 +169,7 @@ describe('gulp-vartree', function() {
         }));
     });
 
-    it('emit custopm event whith the varEvent option', function(done) {
+    it('emit custom event with the varEvent option', function(done) {
       var root = {}
         , filled = false
       ;
@@ -195,7 +190,7 @@ describe('gulp-vartree', function() {
         }))
         .pipe(es.wait(function(){
           assert(filled);
-          deepEq(recSort(root),recSort({
+          neatEqual(recSort(root),recSort({
             "childs":[{
               "title":"file1",
               "path":"/",
@@ -255,7 +250,7 @@ describe('gulp-vartree', function() {
           }));
         }))
         .pipe(es.wait(function(){
-          deepEq(recSort(root, '__childs'),recSort({
+          neatEqual(recSort(root, '__childs'),recSort({
             "__childs":[{
               "__childs":[{
                 "title":"test-file1",
@@ -316,7 +311,7 @@ describe('gulp-vartree', function() {
           }));
         }))
         .pipe(es.wait(function(){
-          deepEq(root,{
+          neatEqual(root,{
             "childs":[{
               "title":"file1",
               "path":"/",
@@ -377,7 +372,7 @@ describe('gulp-vartree', function() {
           }));
         }))
         .pipe(es.wait(function(){
-          deepEq(root,{
+          neatEqual(root,{
             "childs":[{
               "childs":[{
                 "title":"test-index",
@@ -437,7 +432,7 @@ describe('gulp-vartree', function() {
             }));
         }))
         .pipe(es.wait(function(){
-          deepEq(recSort(root),recSort({
+          neatEqual(recSort(root),recSort({
             "childs":[{
               "childs":[{
                 "title":"test-file1",
@@ -516,7 +511,7 @@ describe('gulp-vartree', function() {
           root: root
         }))
         .pipe(es.wait(function(){
-          deepEq(root,{
+          neatEqual(root,{
             "childs":[{
               "title":"file1",
               "path":"/",
@@ -571,7 +566,7 @@ describe('gulp-vartree', function() {
           childsProp: '__childs'
         }))
         .pipe(es.wait(function(){
-          deepEq(root,{
+          neatEqual(root,{
             "__childs":[{
               "title":"file1",
               "path":"/",
@@ -626,7 +621,7 @@ describe('gulp-vartree', function() {
           index: 'index'
         }))
         .pipe(es.wait(function(){
-          deepEq(root,{
+          neatEqual(root,{
             "childs":[{
               "title":"file1",
               "path":"/",
@@ -728,7 +723,7 @@ describe('gulp-vartree', function() {
           parentProp: 'parent'
         }))
         .pipe(es.wait(function(){
-          deepEq(root, expected);
+          neatEqual(root, expected);
           assert(root.childs.some(function(scope1) {
             return scope1.childs&&scope1.childs.every(function(scope2) {
               return scope2.parent === scope1;
@@ -748,7 +743,7 @@ describe('gulp-vartree', function() {
           sortDesc: false
         }))
         .pipe(es.wait(function(){
-          deepEq(root,{
+          neatEqual(root,{
             "childs":[{
               "title":"file1",
               "path":"/",
@@ -804,7 +799,7 @@ describe('gulp-vartree', function() {
           sortDesc: true
         }))
         .pipe(es.wait(function(){
-          deepEq(root,{
+          neatEqual(root,{
             "childs":[{
               "childs":[{
                 "title":"test-index",
