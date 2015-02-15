@@ -1,17 +1,15 @@
-var gutil = require('gulp-util')
-  , Stream = require('readable-stream')
-  , Path = require('path')
-;
+var gutil = require('gulp-util');
+var Stream = require('readable-stream');
+var Path = require('path');
 
 const PLUGIN_NAME = 'gulp-vartree';
 
 function gulpVartree(options) {
 
-  var root
-    , files = []
-    , endCallback
-    , stream = Stream.Transform({objectMode: true})
-  ;
+  var root;
+  var files = [];
+  var endCallback;
+  var stream = Stream.Transform({objectMode: true});
 
   // Giving no root object makes no sense
   if(!(options && options.root instanceof Object)) {

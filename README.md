@@ -1,6 +1,9 @@
 # gulp-vartree
 > Create a variable tree with the files that are passed in with [Gulp](http://gulpjs.com/).
 
+`gulp-vartree` is mainly meant to build static websites with Gulp. You can see
+ a real world usage example in my [blog repository](https://github.com/nfroidure/blog).
+
 [![NPM version](https://badge.fury.io/js/gulp-vartree.png)](https://npmjs.org/package/gulp-vartree) [![Build status](https://secure.travis-ci.org/nfroidure/gulp-vartree.png)](https://travis-ci.org/nfroidure/gulp-vartree) [![Dependency Status](https://david-dm.org/nfroidure/gulp-vartree.png)](https://david-dm.org/nfroidure/gulp-vartree) [![devDependency Status](https://david-dm.org/nfroidure/gulp-vartree/dev-status.png)](https://david-dm.org/nfroidure/gulp-vartree#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/nfroidure/gulp-vartree/badge.png?branch=master)](https://coveralls.io/r/nfroidure/gulp-vartree?branch=master)
 
 ## Usage

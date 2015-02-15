@@ -35,17 +35,18 @@
   ],
   "dependencies": {
     "gulp-util": "~3.0.3",
-    "readable-stream": "^1.0.33",
-    "varstream": "^0.3.2"
+    "readable-stream": "^1.0.33"
   },
   "devDependencies": {
+    "chai": "^2.0.0",
     "coveralls": "~2.11.2",
-    "event-stream": "~3.2.2",
     "gulp": "~3.8.10",
     "gulp-mdvars": "1.0.0",
     "istanbul": "~0.3.5",
     "mocha": "~2.1.0",
     "mocha-lcov-reporter": "0.0.1",
-    "neatequal": "^1.0.0"
+    "neatequal": "^1.0.0",
+    "streamtest": "^1.2.0",
+    "through2": "^0.6.3"
   }
 }
