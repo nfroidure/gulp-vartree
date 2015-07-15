@@ -149,10 +149,14 @@ function gulpVartree(options) {
     // Populate vars when the event is emitted if dealing with streams
     if(file.isStream()) {
       deferredFiles.push(file);
-      file.contents.on('end', function() { // should be options.varEvent when mdvar will be rady
-        deferredPopulationFunctions.push(populateVars);
-        deferredFiles.splice(deferredFiles.indexOf(file), 1);
-        attemptToEndStream && attemptToEndStream();
+      options.varEvents.forEach(function(eventName) {
+        file.contents.on(eventName, function() {
+          deferredPopulationFunctions.push(populateVars);
+          if(1 === deferredFiles.splice(deferredFiles.indexOf(file), 1).length &&
+            attemptToEndStream) {
+            attemptToEndStream();
+          }
+        });
       });
     // Otherwise do it right now !
     } else {
