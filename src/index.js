@@ -35,7 +35,7 @@ function gulpVartree(options) {
   options.sortDesc = options.sortDesc || false;
 
   // Property to look for vars
-  options.prop = options.prop || 'metas';
+  options.prop = options.prop || 'metadata';
 
   // Tree sorting function
   function treeSorter(node) {

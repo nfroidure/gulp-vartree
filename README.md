@@ -84,7 +84,7 @@ An object used as the root of the collected tree.
 
 #### options.prop
 Type: `String`
-Default value: `'metas'`
+Default value: `'metadata'`
 
 Indicates which property metadata will be collected from.
 
