@@ -148,12 +148,13 @@ Default value: `false`
 
 If true, the tree will be sorted in descending order instead of ascending order.
 
-#### options.varEvent
-Type: `String`
-Default value: `'end'`
+#### options.varEvents
+Type: `Array` of `String`
+Default value: `['end']`
 
-For stream mode only. Indicates which event must be listened for to be sure that the
- vars are populated into the files in order to keep them.
+For stream mode only. Indicates which events must be listened for to be sure
+ that the vars are populated into the files in order to process the tree
+ on up to date metadata.
 
 ## Stats
 
