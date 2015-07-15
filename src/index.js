@@ -7,8 +7,9 @@ const PLUGIN_NAME = 'gulp-vartree';
 function gulpVartree(options) {
 
   var root;
-  var files = [];
-  var endCallback;
+  var deferredFiles = [];
+  var deferredPopulationFunctions = [];
+  var attemptToEndStream;
   var stream = Stream.Transform({objectMode: true});
 
   // Giving no root object makes no sense
@@ -21,7 +22,7 @@ function gulpVartree(options) {
 
   options.childsProp = options.childsProp || 'childs';
 
-  options.varEvent = options.varEvent || 'end';
+  options.varEvents = options.varEvents || ['end'];
 
   options.folderProp = options.folderProp || 'folder';
   options.pathProp = options.pathProp || 'path';
@@ -43,27 +44,21 @@ function gulpVartree(options) {
         treeSorter(node);
       });
       node[options.childsProp].sort(function childSorter(a, b) {
-        if('undefined' == typeof a[options.sortProp]) {
-          return 1;
+        var result;
+        if('undefined' === typeof a[options.sortProp]) {
+          result = (options.sortDesc ? 1 : -1);
+        } else if('undefined' === typeof b[options.sortProp]) {
+          result = (options.sortDesc ? -1 : 1);
+        } else {
+          result = a[options.sortProp] > b[options.sortProp] ?
+            (options.sortDesc ? -1 : 1) : (options.sortDesc ? 1 : -1);
         }
-        return a[options.sortProp] > b[options.sortProp] ?
-          (options.sortDesc ? -1 : 1) : (options.sortDesc ? 1 : -1);
+        return result;
       });
     }
   }
 
-  // Stream end function
-  function endStream() {
-    if(options.sortProp) {
-      treeSorter(root);
-    }
-    if('end' !== options.varEvent) {
-      stream.emit(options.varEvent);
-    }
-    endCallback();
-  }
-
-  stream._transform = function(file, unused, cb) {
+  stream._transform = function gulpVartreeTransform(file, unused, cb) {
     // When null just pass through
     if(file.isNull()) {
       stream.push(file); cb();
@@ -91,19 +86,21 @@ function gulpVartree(options) {
     var parent;
     while(folders.length) {
       folder = folders.shift();
-      if('' === folder) continue;
+      if('' === folder) {
+        continue;
+      }
       // Create the scope if it doesn''t exist
       if(!curScope[options.childsProp]) {
         curScope[options.childsProp] = [];
       }
       if(!curScope[options.childsProp].some(function(scope){
-          if(scope[options.folderProp] === folder) {
-            // Set current scope to the one found
-            curScope = scope;
-            return true;
-          }
-          return false;
-        })) {
+        if(scope[options.folderProp] === folder) {
+          // Set current scope to the one found
+          curScope = scope;
+          return true;
+        }
+        return false;
+      })) {
         parent = curScope;
         curScope = {};
         curScope[options.folderProp] = folder;
@@ -117,66 +114,70 @@ function gulpVartree(options) {
     }
     // Vars addition
     function populateVars() {
-        var obj = file[options.prop] || {};
-        obj[options.nameProp] = Path.basename(file.path, Path.extname(file.path));
-        obj[options.pathProp] = path;
-        if(obj[options.pathProp]) {
-          obj[options.pathProp] = ('/' !== obj[options.pathProp][0] ? '/' : '')
-            + obj[options.pathProp] + '/';
-        } else {
-          obj[options.pathProp] = '/';
+      var obj = file[options.prop] || {};
+      obj[options.nameProp] = Path.basename(file.path, Path.extname(file.path));
+      obj[options.pathProp] = path;
+      if(obj[options.pathProp]) {
+        obj[options.pathProp] = ('/' !== obj[options.pathProp][0] ? '/' : '') +
+          obj[options.pathProp] + '/';
+      } else {
+        obj[options.pathProp] = '/';
+      }
+      obj[options.extProp] = options.extValue || Path.extname(file.path);
+      obj[options.hrefProp] = Path.join(
+        obj[options.pathProp],
+        obj[options.nameProp] + obj[options.extProp]
+      );
+      // Adding the file properties to the scope
+      if(options.index &&
+        options.index === Path.basename(file.path, Path.extname(file.path))) {
+        for(var prop in obj) {
+          curScope[prop] = obj[prop];
         }
-        obj[options.extProp] = options.extValue || Path.extname(file.path);
-        obj[options.hrefProp] = Path.join(
-          obj[options.pathProp],
-          obj[options.nameProp] + obj[options.extProp]
-        );
-        // Adding the file properties to the scope
-        if(options.index
-          && options.index === Path.basename(file.path, Path.extname(file.path))) {
-          for(var prop in obj) {
-            curScope[prop] = obj[prop]
-          }
-          file[options.prop] = curScope;
-        } else {
-          // Add a reference to the parent scope
-          if(options.parentProp) {
-            file[options.prop][options.parentProp] = curScope;
-          }
-          if(!curScope[options.childsProp]) {
-            curScope[options.childsProp] = [];
-          }
-          curScope[options.childsProp].push(file[options.prop]);
+        file[options.prop] = curScope;
+      } else {
+        // Add a reference to the parent scope
+        if(options.parentProp) {
+          file[options.prop][options.parentProp] = curScope;
         }
+        if(!curScope[options.childsProp]) {
+          curScope[options.childsProp] = [];
+        }
+        curScope[options.childsProp].push(file[options.prop]);
+      }
     }
     // Populate vars when the event is emitted if dealing with streams
     if(file.isStream()) {
-      files.push(file);
+      deferredFiles.push(file);
       file.contents.on('end', function() { // should be options.varEvent when mdvar will be rady
-        populateVars();
-        files.splice(files.indexOf(file));
-        if(!files.length) {
-          if(endCallback) {
-            endStream();
-          }
-        }
+        deferredPopulationFunctions.push(populateVars);
+        deferredFiles.splice(deferredFiles.indexOf(file), 1);
+        attemptToEndStream && attemptToEndStream();
       });
     // Otherwise do it right now !
     } else {
       populateVars();
     }
-    stream.push(file);
+    this.push(file);
     cb();
   };
 
   // Flush only when everything is populated
-  stream._flush = function(cb) {
-    endCallback = cb;
-    // End the stream if no more waiting for datas
-    if(!files.length) {
-      endStream();
-      endCallback = null;
-    }
+  stream._flush = function gulpVartreeFlush(cb) {
+    var _this = this;
+    attemptToEndStream = function gulpVartreeEndCallback() {
+      if(deferredFiles.length) {
+        return;
+      }
+      deferredPopulationFunctions.forEach(function(populateVars) {
+        populateVars();
+      });
+      if(options.sortProp) {
+        treeSorter(root);
+      }
+      cb();
+    };
+    attemptToEndStream();
   };
 
   return stream;
@@ -184,4 +185,3 @@ function gulpVartree(options) {
 }
 
 module.exports = gulpVartree;
-

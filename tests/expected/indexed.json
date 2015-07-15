@@ -1,11 +1,5 @@
 {
   "childs":[{
-    "title":"file1",
-    "name":"file1",
-    "path":"/",
-    "ext":".md",
-    "href":"/file1.md"
-  },{
     "folder":"test",
     "childs":[{
       "title":"test-file1",
@@ -25,6 +19,12 @@
   "path":"/test/",
   "ext":".md",
   "href":"/test/index.md"
+  },{
+    "title":"file1",
+    "name":"file1",
+    "path":"/",
+    "ext":".md",
+    "href":"/file1.md"
   },{
     "title":"file2",
     "name":"file2",
